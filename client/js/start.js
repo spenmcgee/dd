@@ -14,15 +14,21 @@ var camera;
 
 async function start() {
   console.log("Starting...");
+
   var cameraEl = document.getElementById("camera");
-  var dl = new DragListener(cameraEl);
+
   var board = new Board(BOARD, TILE_SIZE);
   await board.init();
+
   var cam = new Camera(cameraEl, board.canvas);
+
+  var cx=0,cy=0;
+  var dl = new DragListener(cameraEl);
   dl.onDrag(e => {
     var dx = e.detail.dx, dy = e.detail.dy;
-    cam.draw(dx,dy);
+    cam.draw(dx, dy);
   })
+
   cam.draw(0,0);
   camera = cam;
 

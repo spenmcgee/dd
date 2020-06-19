@@ -7,6 +7,8 @@ class Camera {
     this.src = srcCanvas;
     this.width = canvas.width;
     this.height = canvas.height;
+    this.cx = 0;
+    this.cy = 0;
   }
 
   getContext(canvas) {
@@ -19,17 +21,12 @@ class Camera {
     return { canvas, context };
   }
 
-  draw(x,y) {
-    // var i = new Image();
-    // i.src = "/client/img/grass1.png";
-    // i.onload = () => this.context.drawImage(i, 0, 0, 100, 100);
-    //console.log("draw", this.src);
-    //var cw=this.canvas.width, ch=this.canvas.height;
-    var cw=this.canvas.width, ch=this.canvas.height;
-    this.context.clearRect(0, 0, cw, ch);
+  draw(x, y) {
+    this.cx = -x, this.cy = -y;
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.drawImage(this.src,
-      -x, -y, cw, ch,
-      0, 0, cw, ch);
+      this.cx, this.cy, this.canvas.width, this.canvas.height,
+      0, 0, this.canvas.width, this.canvas.height);
     this.context.fillStyle = "#FF0000";
     this.context.fillRect(100, 50, 40, 60);
   }

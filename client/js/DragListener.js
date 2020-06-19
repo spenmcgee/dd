@@ -7,22 +7,28 @@ class Listener {
     this.dx = 0;
     this.dy = 0;
     this.dragging = false;
+    this.cx = 0;
+    this.cy = 0;
 
     this.el.addEventListener("mousedown", (evt) => {
-      this.sx = evt.clientX, this.sy=evt.clientY;
+      this.sx=evt.clientX, this.sy=evt.clientY;
       this.dragging = true;
     }, false);
 
     this.el.addEventListener("mousemove", (evt) => {
       if (this.dragging) {
         this.dx=evt.clientX-this.sx, this.dy=evt.clientY-this.sy;
-        var e = new CustomEvent('drag', {detail:{dx:this.dx,dy:this.dy}});
+        var e = new CustomEvent('drag', {detail:{dx:this.dx+this.cx,dy:this.dy+this.cy}});
         this.el.dispatchEvent(e);
       }
     }, false);
 
     this.el.addEventListener("mouseup", (evt) => {
       this.dragging = false;
+      //var e = new CustomEvent('dragdone', {detail:{dx:this.dx,dy:this.dy}});
+      //this.el.dispatchEvent(e);
+      this.cx += this.dx;
+      this.cy += this.dy;
     }, false);
 
   }
