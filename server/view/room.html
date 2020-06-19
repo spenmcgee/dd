@@ -4,10 +4,6 @@
   import { start } from '/client/js/start.js';
   document.addEventListener("DOMContentLoaded", function(event) {
     start();
-    document.getElementById("button1").addEventListener("click", function(e) {
-      console.log("click", e);
-      drawStuff();
-    })
   });
 </script>
 <style>
@@ -33,8 +29,7 @@
 <body>
 
 <div id="menu">
-  dd / 
-  room: <input type="text" name="room" id="room"> <button id="room-btn">enter room</button>
+  <a href="/">dd</a> / <a href="/tiles">tiles</a> / You are in room <span id="current-room-name"></span> / 
 </div>
 
 <div id="main">

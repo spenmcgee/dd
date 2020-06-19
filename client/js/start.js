@@ -1,6 +1,7 @@
 import { Board } from '/client/js/Board.js';
 import { Camera } from '/client/js/Camera.js';
 import { DragListener } from '/client/js/DragListener.js';
+import { Menu } from '/client/js/Menu.js';
 
 var TILE_SIZE = 500;
 var TILES = ['grass1'];
@@ -31,6 +32,10 @@ async function start() {
   cam.draw(0,0);
 
   //document.getElementById("main").appendChild(board.canvas);
+  var menu = new Menu();
+  menu.render({
+    currentRoomNameEl: document.getElementById("current-room-name")
+  })
 }
 
 export { start }
