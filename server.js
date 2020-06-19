@@ -1,8 +1,10 @@
+const http = require('http');
 const express = require('express');
 const path = require('path');
+const port = process.env.PORT || 3000;
 
-const app = express();
-const port = 3000;
+var app = express();
+var httpServer = http.createServer(app);
 
 app.use('/client', express.static('client'));
 app.use('/lib', express.static('node_modules'));

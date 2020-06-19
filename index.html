@@ -1,7 +1,7 @@
 <html>
 <head>
 <script type="module">
-  import { start, drawStuff } from '/client/js/start.js';
+  import { start } from '/client/js/start.js';
   document.addEventListener("DOMContentLoaded", function(event) {
     start();
     document.getElementById("button1").addEventListener("click", function(e) {
@@ -20,16 +20,25 @@
     background-color: pink;
     padding: 10px;
   }
+  canvas#camera {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
 
 <div id="menu">
-  DD ZONE <button id="button1">Make it rain</button>
+  dd / 
+  room: <input type="text" name="room" id="room"> <button id="room-btn">enter room</button>
 </div>
 
 <div id="main">
-  <canvas id="camera" style="background-color:#eee;" width="800" height="400" />
+  <canvas id="camera" style="background-color:#eee;" />
 </div>
 
 </body>

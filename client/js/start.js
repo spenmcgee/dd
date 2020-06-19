@@ -22,21 +22,15 @@ async function start() {
 
   var cam = new Camera(cameraEl, board.canvas);
 
-  var cx=0,cy=0;
   var dl = new DragListener(cameraEl);
   dl.onDrag(e => {
     var dx = e.detail.dx, dy = e.detail.dy;
     cam.draw(dx, dy);
-  })
+  });
 
   cam.draw(0,0);
-  camera = cam;
 
   //document.getElementById("main").appendChild(board.canvas);
 }
 
-function drawStuff() {
-  camera.draw();
-}
-
-export { start, drawStuff }
+export { start }

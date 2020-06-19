@@ -2,6 +2,7 @@
   "main": "server.js",
   "dependencies": {
     "express": "^4.17.1",
-    "pinch-zoom-js": "^2.3.4"
+    "pinch-zoom-js": "^2.3.4",
+    "socket.io": "^2.3.0"
   }
 }
