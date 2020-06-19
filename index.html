@@ -1,0 +1,38 @@
+<html>
+<head>
+<!--<script type="text/javascript" src="lib/pinch-zoom-js/dist/pinch-zoom.min.js"></script>-->
+<!--<script type="module" src="/client/js/start.js"></script>-->
+<script type="module">
+  import { start, drawStuff } from '/client/js/start.js';
+  document.addEventListener("DOMContentLoaded", function(event) {
+    start();
+    document.getElementById("button1").addEventListener("click", function(e) {
+      console.log("click", e);
+      drawStuff();
+    })
+  });
+</script>
+<style>
+  html, body {
+    width:  100%;
+    height: 100%;
+    margin: 0;
+  }
+  #menu {
+    background-color: pink;
+    padding: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div id="menu">
+  DD ZONE <button id="button1">Make it rain</button>
+</div>
+
+<div id="main">
+  <canvas id="camera" style="background-color:#eee;" width="800" height="400" />
+</div>
+
+</body>
+</html>
