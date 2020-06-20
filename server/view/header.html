@@ -1,0 +1,35 @@
+<html>
+<head>
+<script type="module">
+  import { start } from '/client/js/start.js';
+  document.addEventListener("DOMContentLoaded", function(event) {
+    start();
+  });
+</script>
+<style>
+  html, body {
+    width:  100%;
+    height: 100%;
+    margin: 0;
+  }
+  #menu {
+    background-color: pink;
+    padding: 10px;
+  }
+  canvas#camera {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div id="menu">
+  <a href="/">dd</a> / <a href="/tiles">tiles</a> / You are in room <span id="current-room-name"></span> /
+</div>
+
+<div id="main">

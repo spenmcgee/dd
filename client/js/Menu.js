@@ -8,8 +8,8 @@ class Menu {
     //var url = new URL(window.location.href);
     //console.log("here is the name", url)
     //console.log("hereeee", conf.currentRoomNameEl);
-    this.currentRoomNameEl = conf.currentRoomNameEl;
-    this.currentRoomNameEl.appendChild(document.createTextNode(this.roomName))
+    //this.currentRoomNameEl = conf.currentRoomNameEl;
+    //this.currentRoomNameEl.appendChild(document.createTextNode(this.roomName))
   }
 }
 

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<h1>tiles</h1>
+<h2>Add Tile</h2>
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="tileFile"> <input type="submit" value="Add Tile">
+</form>
+
+{% for tile in tiles %}
+  <h3>{{tile}}</h3>
+  <img src="/client/img/{{tile}}.png" alt="{{tile}}">
+{% endfor %}
+
+{% endblock %}
