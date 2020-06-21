@@ -24,8 +24,8 @@ class Camera {
     this.context.drawImage(this.src,
       -x, -y, this.canvas.width, this.canvas.height,
       0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = "#FF0000";
-    this.context.fillRect(100, 50, 40, 60);
+    //this.context.fillStyle = "#FF0000";
+    //this.context.fillRect(100, 50, 40, 60);
   }
 
 }

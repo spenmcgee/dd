@@ -1,13 +1,25 @@
 class Board {
-  constructor(tiles, tileSize) {
+  constructor(tiles) {
     this.tiles = tiles;
-    this.tileSize = tileSize;
-    let { canvas, context } = this.buildCanvas(tiles.length, tileSize);
-    this.canvas = canvas;
-    this.context = context;
+    this.tileSize = null;
+  }
+
+  async getTileSize(tiles) {
+    var tile0 = tiles[0][0];
+    var img = new Image();
+    img.src = `/client/img/${tile0}.png`;
+    return new Promise(r => {
+      img.onload = function() {
+        r(this.width);
+      }
+    })
   }
 
   async init() {
+    this.tileSize = await this.getTileSize(this.tiles)+10;
+    let { canvas, context } = this.buildCanvas(this.tiles.length, this.tileSize);
+    this.canvas = canvas;
+    this.context = context;
     await this.layTiles(this.context);
   }
 
@@ -26,7 +38,7 @@ class Board {
 
   async layTile(ctx, tileName, px, py) {
     var img = new Image();
-    img.src = `client/img/${tileName}.png`;
+    img.src = `/client/img/${tileName}.png`;
     return new Promise(r => {
       img.onload = () => {
         ctx.drawImage(img, px, py);

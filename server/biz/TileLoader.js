@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 class TileLoader {
+
   static async loadTiles() {
     const directoryPath = path.join(__dirname, '/../../client/img');
     return new Promise((resolve, reject) => {
@@ -19,6 +20,7 @@ class TileLoader {
       });
     })
   }
+  
 }
 
 module.exports = TileLoader;

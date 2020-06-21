@@ -8,6 +8,12 @@ var router = express.Router();
 
 router.get('/', (req, res) => res.render("home.html"));
 
+router.get('/api/:room/board', (req, res) => {
+  var room = req.params.room;
+  var board = BoardLoader.getBoard(room);
+  res.json(board);
+})
+
 router.get('/:room/board', (req, res) => {
   var room = req.params.room;
   var board = BoardLoader.getBoard(room);

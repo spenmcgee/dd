@@ -1,41 +1,37 @@
 import { Board } from '/client/js/Board.js';
 import { Camera } from '/client/js/Camera.js';
 import { DragListener } from '/client/js/DragListener.js';
-//import { Menu } from '/client/js/Menu.js';
+import { BoardLoader } from '/client/js/BoardLoader.js';
+import Navigo from '/lib/navigo/lib/navigo.es.js';
 
 var TILE_SIZE = 500;
-var TILES = ['grass1'];
-var BOARD = [
-  ['grass1', 'grass1', 'grass1'],
-  ['grass1', 'grass1', 'grass1'],
-  ['grass1', 'grass1', null],
-]
 
-var camera;
-
-async function start() {
-  console.log("Starting...");
-
-  var cameraEl = document.getElementById("camera");
-
-  var board = new Board(BOARD, TILE_SIZE);
+async function boardStart(room) {
+  var boardJson = await BoardLoader.loadBoard(room);
+  var board = new Board(boardJson, TILE_SIZE);
   await board.init();
-
+  var cameraEl = document.getElementById("camera");
   var cam = new Camera(cameraEl, board.canvas);
-
   var dl = new DragListener(cameraEl);
   dl.onDrag(e => {
     var dx = e.detail.dx, dy = e.detail.dy;
     cam.draw(dx, dy);
   });
+  cam.draw(0, 0);
+}
 
-  cam.draw(0,0);
-
-  //document.getElementById("main").appendChild(board.canvas);
-  //var menu = new Menu();
-  //menu.render({
-  //  currentRoomNameEl: document.getElementById("current-room-name")
-  //})
+async function start() {
+  console.log("Starting...");
+  var nav = new Navigo('/');
+  nav.on(':room/board', params => {
+  })
+  nav.on(':room/tiles', params => {
+  })
+  .on(':room', params => {
+    console.log("route :room", params);
+    boardStart(params.room);
+  })
+  .resolve();
 }
 
 export { start }

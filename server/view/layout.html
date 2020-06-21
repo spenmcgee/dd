@@ -19,9 +19,19 @@
     margin-top: 10px;
   }
 </style>
+
+<script type="module">
+  import { start } from '/client/js/start.js';
+  document.addEventListener("DOMContentLoaded", function(event) {
+    start();
+  });
+</script>
+
 {% block head %}
 {% endblock %}
+
 </head>
+
 <body>
 
 <div id="menu">
