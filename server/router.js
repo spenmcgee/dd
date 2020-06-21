@@ -2,10 +2,24 @@ const express = require('express');
 const TileLoader = require('./biz/TileLoader');
 const path = require('path');
 const fs = require('fs');
+const BoardLoader = require('./biz/BoardLoader');
 
 var router = express.Router();
 
 router.get('/', (req, res) => res.render("home.html"));
+
+router.get('/:room/board', (req, res) => {
+  var room = req.params.room;
+  var board = BoardLoader.getBoard(room);
+  res.render("board.html", {room:room, boardJson:JSON.stringify(board, null, 2)});
+});
+
+router.post('/:room/board', (req, res) => {
+  var room = req.params.room;
+  var boardJson = req.body.boardJson;
+  var board = BoardLoader.saveBoard(room, boardJson);
+  res.render("board.html", {room:room, boardJson:boardJson});
+});
 
 router.get('/:room', (req, res) => {
   var room = req.params.room;

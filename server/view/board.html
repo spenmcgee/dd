@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<form method="post">
+  <textarea name="boardJson" rows="20" cols="80">{{boardJson}}</textarea>
+  <br>
+  <button type="submit">Save</button>
+</form>
+{% endblock %}

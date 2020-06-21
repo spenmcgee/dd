@@ -1,11 +1,5 @@
 <html>
 <head>
-<script type="module">
-  import { start } from '/client/js/start.js';
-  document.addEventListener("DOMContentLoaded", function(event) {
-    start();
-  });
-</script>
 <style>
   html, body {
     width:  100%;
@@ -31,8 +25,10 @@
 <body>
 
 <div id="menu">
-  <a href="/">dd</a> / <a href="/{{room}}">{{room}}</a> /
-  <a href="/{{room}}/tiles">tiles</a> 
+  <a href="/">dd</a> /
+  <a href="/{{room}}">{{room}}</a> /
+  <a href="/{{room}}/board">board</a> /
+  <a href="/{{room}}/tiles">tiles</a> /
 </div>
 
 <div id="main">
