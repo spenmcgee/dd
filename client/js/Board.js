@@ -16,7 +16,7 @@ class Board {
   }
 
   async init() {
-    this.tileSize = await this.getTileSize(this.tiles)+10;
+    this.tileSize = await this.getTileSize(this.tiles);
     let { canvas, context } = this.buildCanvas(this.tiles.length, this.tileSize);
     this.canvas = canvas;
     this.context = context;

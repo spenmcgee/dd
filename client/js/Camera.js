@@ -14,7 +14,7 @@ class Camera {
     //canvas.style.zIndex = 6;
     //canvas.style.position = "absolute";
     //canvas.style.border = "0px";
-    canvas.style['background-color'] = 'purple';
+    //canvas.style['background-color'] = 'purple';
     var context = canvas.getContext("2d");
     return { canvas, context };
   }
