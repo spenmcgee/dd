@@ -3,6 +3,7 @@ const TileLoader = require('./biz/TileLoader');
 const path = require('path');
 const fs = require('fs');
 const BoardLoader = require('./biz/BoardLoader');
+const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
 
 var router = express.Router();
 
@@ -40,17 +41,14 @@ router.get('/:room/tiles', async function (req, res) {
 
 router.post('/:room/tiles', async function (req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {
-     return res.status(400).send('No files were uploaded.');
-   }
-   let tileFile = req.files.tileFile;
-   console.log("here", tileFile);
-   var destFilepath = `${__dirname}/../client/img/${tileFile.name}`;
-   tileFile.mv(destFilepath, function(err) {
-     if (err)
-       return res.status(500).send(err);
-     //res.send('File uploaded!');
-   });
-
+    return res.status(400).send('No files were uploaded.');
+  }
+  let tileFile = req.files.tileFile;
+  var destFilepath = `${DATA_ROOT}/tile/${tileFile.name}`;
+  tileFile.mv(destFilepath, function(err) {
+    if (err)
+      return res.status(500).send(err);
+  });
   var room = req.params.room;
   var tiles = await TileLoader.loadTiles();
   res.render("tiles.html", {room:room, tiles:tiles});

@@ -7,7 +7,7 @@ class Board {
   async getTileSize(tiles) {
     var tile0 = tiles[0][0];
     var img = new Image();
-    img.src = `/client/img/${tile0}.png`;
+    img.src = `/tile/${tile0}.png`;
     return new Promise(r => {
       img.onload = function() {
         r(this.width);
@@ -38,7 +38,7 @@ class Board {
 
   async layTile(ctx, tileName, px, py) {
     var img = new Image();
-    img.src = `/client/img/${tileName}.png`;
+    img.src = `/tile/${tileName}.png`;
     return new Promise(r => {
       img.onload = () => {
         ctx.drawImage(img, px, py);

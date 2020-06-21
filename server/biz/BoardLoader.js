@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
 
 const BOARD1 = [
   ['grass1', 'grass2'],
@@ -15,7 +16,7 @@ class BoardLoader {
 
   static getBoard(name) {
     var board = BOARD1;
-    var filepath = path.join(`${__dirname}/../../board/${name}.json`);
+    var filepath = path.join(DATA_ROOT, 'board', `${name}.json`);
     try {
       var boardJson = fs.readFileSync(filepath);
       board = JSON.parse(boardJson)
@@ -27,7 +28,7 @@ class BoardLoader {
 
   static saveBoard(name, json) {
     BoardLoader.checkBoardSyntax(json);
-    var filepath = path.join(`${__dirname}/../../board/${name}.json`);
+    var filepath = path.join(DATA_ROOT, 'board', `${name}.json`);
     fs.writeFileSync(filepath, json);
   }
 

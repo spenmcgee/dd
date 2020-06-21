@@ -1,10 +1,11 @@
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
+const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
 
 class TileLoader {
 
   static async loadTiles() {
-    const directoryPath = path.join(__dirname, '/../../client/img');
+    const directoryPath = path.join(DATA_ROOT, 'tile');
     return new Promise((resolve, reject) => {
       fs.readdir(directoryPath, function (err, files) {
         if (err) reject('Unable to scan directory: ' + err);
@@ -20,7 +21,7 @@ class TileLoader {
       });
     })
   }
-  
+
 }
 
 module.exports = TileLoader;
