@@ -1,3 +1,5 @@
+const CommandParser = require('./CommandParser');
+
 class ChatController {
 
   constructor() {
@@ -6,8 +8,10 @@ class ChatController {
   }
 
   dispatch(data, wss, client) {
-    if (data.command) {
-      if (data.command == 'join') {
+    var outboundDataArray = [Object.assign({}, data)];
+
+    if (data.meta) {
+      if (data.meta == 'join') {
         var user = {
           id: data.id,
           user: data.user,
@@ -19,8 +23,17 @@ class ChatController {
         this.rooms[data.room].push(user);
       }
     }
-    //console.log("dispatch", this.rooms);
-    return data;
+
+    var messageText = data.messageText;
+    var parser = new CommandParser(messageText);
+    var cmd = parser.parse(messageText);
+    if (cmd) {
+      var results = parser.execute(cmd);
+      var resultData = Object.assign(data, results);
+      outboundDataArray.push(resultData);
+    }
+
+    return outboundDataArray;
   }
 
 }

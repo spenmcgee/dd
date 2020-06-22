@@ -13,15 +13,17 @@ class ChatServer {
       ws.on('message', function(json) {
         console.log("(server#ws) incoming data", json)
         var data = JSON.parse(json);
-        var outboundData = controller.dispatch(data, wss, ws);
-        var outboundRoom = outboundData.room;
-        if (outboundRoom in controller.rooms) {
-          controller.rooms[outboundRoom].forEach(user => {
-            if (user.client.readyState === WebSocket.OPEN) {
-              user.client.send(JSON.stringify(outboundData));
-            }
-          })
-        }
+        var outboundDataArray = controller.dispatch(data, wss, ws);
+        outboundDataArray.forEach(outboundData => {
+          var outboundRoom = outboundData.room;
+          if (outboundRoom in controller.rooms) {
+            controller.rooms[outboundRoom].forEach(user => {
+              if (user.client.readyState === WebSocket.OPEN) {
+                user.client.send(JSON.stringify(outboundData));
+              }
+            })
+          }
+        })
       })
     })
   }

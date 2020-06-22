@@ -24,14 +24,14 @@ class Chat {
     this.room = getCookie('room');
   }
 
-  _buildMessage(messageText, command) {
+  _buildMessage(messageText, meta) {
     var id = this.id, room = this.room, user = this.user;
     var data = {
       id: id,
       user: user,
       room: room,
       messageText: messageText,
-      command: command
+      meta: meta
     }
     return JSON.stringify(data);
   }
@@ -61,7 +61,7 @@ class Chat {
     this.socket = socket;
     this._wireUp(socket);
     socket.onopen = e => {
-      var jsonStr = this._buildMessage("joining room", 'join');
+      var jsonStr = this._buildMessage("joining room", "join");
       socket.send(jsonStr);
     }
   }
