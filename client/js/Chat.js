@@ -57,7 +57,7 @@ class Chat {
 
   connect() {
     var id = this.id, room = this.root, user = this.user;
-    var socket = new WebSocket("ws://localhost:3001");
+    var socket = new WebSocket(`ws://${location.hostname}:3001`);
     this.socket = socket;
     this._wireUp(socket);
     socket.onopen = e => {
