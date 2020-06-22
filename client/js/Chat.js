@@ -1,0 +1,71 @@
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+class Chat {
+
+  constructor(formEl, messagesEl) {
+    this.formEl = formEl;
+    this.messagesEl = messagesEl;
+    this.id = getCookie('id');
+    this.user = getCookie('user');
+    this.room = getCookie('room');
+  }
+
+  _buildMessage(messageText, command) {
+    var id = this.id, room = this.room, user = this.user;
+    var data = {
+      id: id,
+      user: user,
+      room: room,
+      messageText: messageText,
+      command: command
+    }
+    return JSON.stringify(data);
+  }
+
+  _wireUp(socket) {
+    var chat = this;
+    this.formEl.onsubmit = function(e) {
+      e.preventDefault();
+      let messageText = this.message.value;
+      var jsonStr = chat._buildMessage(messageText);
+      socket.send(jsonStr);
+      this.message.value = "";
+      return false;
+    };
+    socket.onmessage = e => {
+      let data = JSON.parse(e.data);
+      let messageElem = document.createElement('div');
+      messageElem.classList.add('messages-item');
+      messageElem.textContent = `${data.user}: ${data.messageText}`;
+      this.messagesEl.prepend(messageElem);
+    }
+  }
+
+  connect() {
+    var id = this.id, room = this.root, user = this.user;
+    var socket = new WebSocket("ws://localhost:3001");
+    this.socket = socket;
+    this._wireUp(socket);
+    socket.onopen = e => {
+      var jsonStr = this._buildMessage("joining room", 'join');
+      socket.send(jsonStr);
+    }
+  }
+
+}
+
+export { Chat }

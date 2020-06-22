@@ -7,7 +7,11 @@ const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
 
 var router = express.Router();
 
-router.get('/', (req, res) => res.render("home.html"));
+router.get('/', (req, res) => {
+  var room = req.cookies["room"];
+  var user = req.cookies["user"];
+  res.render("home.html", {room:room, user:user})
+});
 
 router.get('/api/:room/board', (req, res) => {
   var room = req.params.room;
@@ -17,8 +21,9 @@ router.get('/api/:room/board', (req, res) => {
 
 router.get('/:room/board', (req, res) => {
   var room = req.params.room;
+  var user = req.cookies["user"];
   var board = BoardLoader.getBoard(room);
-  res.render("board.html", {room:room, boardJson:JSON.stringify(board, null, 2)});
+  res.render("board.html", {room:room, user:user, boardJson:JSON.stringify(board, null, 2)});
 });
 
 router.post('/:room/board', (req, res) => {
@@ -30,7 +35,8 @@ router.post('/:room/board', (req, res) => {
 
 router.get('/:room', (req, res) => {
   var room = req.params.room;
-  res.render("room.html", {room:room});
+  var user = req.cookies["user"];
+  res.render("room.html", {room:room, user:user});
 });
 
 router.get('/:room/tiles', async function (req, res) {

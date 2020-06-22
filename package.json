@@ -2,12 +2,13 @@
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
     "navigo": "^7.1.2",
     "nunjucks": "^3.2.1",
     "pinch-zoom-js": "^2.3.4",
-    "socket.io": "^2.3.0"
+    "ws": "^7.3.0"
   }
 }

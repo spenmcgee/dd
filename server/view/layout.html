@@ -19,6 +19,19 @@
     margin-top: 10px;
     background-color: #aaa;
   }
+  #chat-column {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background-color: pink;
+    padding: 10px;
+    width: 300px;
+  }
+  #chat-column .messages-item {
+    padding: 5px;
+    background-color: red;
+    margin-bottom: 5px;
+  }
 </style>
 
 <script type="module">
@@ -37,9 +50,11 @@
 
 <div id="menu">
   <a href="/">dd</a> /
-  <a href="/{{room}}">{{room}}</a> /
+  <a href="/{{room}}">{{user}}@{{room}}</a> /
+  <!--
   <a href="/{{room}}/board">board</a> /
   <a href="/{{room}}/tiles">tiles</a> /
+  -->
 </div>
 
 <div id="main">

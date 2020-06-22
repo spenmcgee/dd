@@ -6,11 +6,15 @@ const router = require('./server/router');
 const nunjucks = require('nunjucks');
 const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
+const ChatServer = require('./server/biz/ChatServer');
+const ChatController = require('./server/biz/ChatController');
 
 var app = express();
 var httpServer = http.createServer(app);
 app.use(fileUpload());
+app.use(cookieParser());
 app.use(bodyParser.json({limit: "5mb"}));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: false }));
 
@@ -21,5 +25,8 @@ app.use('/client', express.static('client'));
 app.use('/lib', express.static('node_modules'));
 app.use('/tile', express.static(path.join(DATA_ROOT, 'tile')));
 
+var chatController = new ChatController();
+var chatServer = new ChatServer(3001, chatController);
+
 console.log("(server) DATA_ROOT", DATA_ROOT);
-app.listen(port, () => console.log(`listening on ${port}`));
+app.listen(3000, () => console.log(`Listening on 3000 and 3001`));

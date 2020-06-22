@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block main %}
+<div id="chat-column">
+  <form name="chat" id="chat">
+    <input type="text" name="message">
+    <input type="submit" value="Send">
+  </form>
+  <div id="messages"></div>
+</div>
 <div id="main">
   <canvas id="camera" />
 </div>

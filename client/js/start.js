@@ -3,12 +3,11 @@ import { Camera } from '/client/js/Camera.js';
 import { DragListener } from '/client/js/DragListener.js';
 import { BoardLoader } from '/client/js/BoardLoader.js';
 import Navigo from '/lib/navigo/lib/navigo.es.js';
-
-var TILE_SIZE = 500;
+import { Chat } from '/client/js/Chat.js';
 
 async function boardStart(room) {
   var boardJson = await BoardLoader.loadBoard(room);
-  var board = new Board(boardJson, TILE_SIZE);
+  var board = new Board(boardJson);
   await board.init();
   var cameraEl = document.getElementById("camera");
   var cam = new Camera(cameraEl, board.canvas);
@@ -18,6 +17,9 @@ async function boardStart(room) {
     cam.draw(dx, dy);
   });
   cam.draw(0, 0);
+
+  var chat = new Chat(document.getElementById('chat'), document.getElementById('messages'));
+  chat.connect();
 }
 
 async function start() {
