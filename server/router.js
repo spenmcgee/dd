@@ -26,11 +26,18 @@ router.get('/:room/board', (req, res) => {
   res.render("board.html", {room:room, user:user, boardJson:JSON.stringify(board, null, 2)});
 });
 
+router.get('/:room/commands', (req, res) => {
+  var room = req.params.room;
+  var user = req.cookies["user"];
+  res.render("commands.html", {room:room, user:user});
+});
+
 router.post('/:room/board', (req, res) => {
   var room = req.params.room;
+  var user = req.cookies["user"];
   var boardJson = req.body.boardJson;
   var board = BoardLoader.saveBoard(room, boardJson);
-  res.render("board.html", {room:room, boardJson:boardJson});
+  res.render("board.html", {room:room, user:user, boardJson:boardJson});
 });
 
 router.get('/:room', (req, res) => {
@@ -41,8 +48,9 @@ router.get('/:room', (req, res) => {
 
 router.get('/:room/tiles', async function (req, res) {
   var room = req.params.room;
+  var user = req.cookies["user"];
   var tiles = await TileLoader.loadTiles();
-  res.render("tiles.html", {room:room, tiles:tiles});
+  res.render("tiles.html", {room:room, user:user, tiles:tiles});
 });
 
 router.post('/:room/tiles', async function (req, res) {

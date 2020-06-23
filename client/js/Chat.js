@@ -1,3 +1,4 @@
+
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
@@ -16,12 +17,13 @@ function getCookie(cname) {
 
 class Chat {
 
-  constructor(formEl, messagesEl) {
+  constructor(formEl, messagesEl, messageHandler) {
     this.formEl = formEl;
     this.messagesEl = messagesEl;
     this.id = getCookie('id');
     this.user = getCookie('user');
     this.room = getCookie('room');
+    this.messageHandler = messageHandler;
   }
 
   _buildMessage(messageText, meta) {
@@ -48,6 +50,7 @@ class Chat {
     };
     socket.onmessage = e => {
       let data = JSON.parse(e.data);
+      chat.messageHandler.handleMessage(data);
       let messageElem = document.createElement('div');
       messageElem.classList.add('messages-item');
       messageElem.textContent = `${data.user}: ${data.messageText}`;

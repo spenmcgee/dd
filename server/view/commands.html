@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<style>
+  td {
+    padding: 10px;
+    background-color: #eee;
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<div id="main">
+  <table>
+    <tr>
+      <th>cmd</th>
+      <th>syntax</th>
+      <th>examples</th>
+      <th>scope</th>
+    </tr>
+    <tr>
+      <td>*roll: roll the dice</td>
+      <td><pre>*roll[({{"<dieCount>d<dieSize>"|escape}})]</pre></td>
+      <td>*roll, *roll(2d20)</td>
+      <td>user</td>
+    </tr>
+  </table>
+</div>
+{% endblock %}
