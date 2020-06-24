@@ -13,11 +13,9 @@ class Listener {
     this.el.addEventListener("mousedown", (evt) => {
       this.sx=evt.clientX, this.sy=evt.clientY;
       this.dragging = true;
-      console.log("mousedown")
     }, false);
 
     this.el.addEventListener("mousemove", (evt) => {
-      console.log("mousemove")
       if (this.dragging) {
         this.dx=evt.clientX-this.sx, this.dy=evt.clientY-this.sy;
         var e = new CustomEvent('drag', {detail:{dx:this.dx+this.cx,dy:this.dy+this.cy}});
@@ -29,7 +27,7 @@ class Listener {
       this.dragging = false;
       this.cx += this.dx;
       this.cy += this.dy;
-      console.log("mouseup")
+      this.dx = 0, this.dy = 0;
     }, false);
 
   }
