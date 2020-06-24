@@ -23,7 +23,7 @@ app.set('view engine', 'html');
 app.use('/', router);
 app.use('/client', express.static('client'));
 app.use('/lib', express.static('node_modules'));
-app.use('/tile', express.static(path.join(DATA_ROOT, 'tile')));
+app.use('/asset', express.static(DATA_ROOT));
 
 var chatController = new ChatController();
 var chatServer = new ChatServer(3001, chatController);

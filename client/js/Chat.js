@@ -1,28 +1,13 @@
-
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i <ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
+import { Cookie } from './Cookie.js';
 
 class Chat {
 
   constructor(formEl, messagesEl, messageHandler) {
     this.formEl = formEl;
     this.messagesEl = messagesEl;
-    this.id = getCookie('id');
-    this.user = getCookie('user');
-    this.room = getCookie('room');
+    this.id = Cookie.getCookie('id');
+    this.user = Cookie.getCookie('user');
+    this.room = Cookie.getCookie('room');
     this.messageHandler = messageHandler;
   }
 

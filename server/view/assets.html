@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<h1>assets</h1>
+<h2>Add Asset</h2>
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="assetFile"> <input type="submit" value="Add Asset">
+</form>
+
+<h2>Assets</h2>
+{% for asset in assets %}
+  <br><a href="/asset/{{asset}}" alt="{{asset}}">{{asset}}</a>
+{% endfor %}
+
+{% endblock %}

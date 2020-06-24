@@ -10,6 +10,8 @@
     "nunjucks": "^3.2.1",
     "pinch-zoom-js": "^2.3.4",
     "random": "^2.2.0",
+    "snap.svg.zpd": "^0.0.11",
+    "snapsvg": "^0.5.1",
     "ws": "^7.3.0"
   }
 }

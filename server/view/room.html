@@ -1,18 +1,21 @@
 {% extends "layout.html" %}
 
 {% block head %}
+<script type="text/javascript" src="/lib/snapsvg/dist/snap.svg.js"></script>
+<script type="text/javascript" src="/lib/snap.svg.zpd/snap.svg.zpd.js"></script>
+{% endblock %}
 
+{% block menu %}
+<button id="up">up</button>
 {% endblock %}
 
 {% block main %}
+<svg id="board"></svg>
 <div id="chat-column">
   <form name="chat" id="chat">
     <input type="text" name="message">
     <input type="submit" value="Send">
   </form>
   <div id="messages"></div>
-</div>
-<div id="main">
-  <canvas id="camera" />
 </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 const express = require('express');
-const TileLoader = require('./biz/TileLoader');
+const AssetLoader = require('./biz/AssetLoader');
 const path = require('path');
 const fs = require('fs');
 const BoardLoader = require('./biz/BoardLoader');
@@ -13,17 +13,17 @@ router.get('/', (req, res) => {
   res.render("home.html", {room:room, user:user})
 });
 
-router.get('/api/:room/board', (req, res) => {
+router.get('/api/:room/config', (req, res) => {
   var room = req.params.room;
-  var board = BoardLoader.getBoard(room);
+  var board = BoardLoader.getConfig(room);
   res.json(board);
 })
 
-router.get('/:room/board', (req, res) => {
+router.get('/:room/config', (req, res) => {
   var room = req.params.room;
   var user = req.cookies["user"];
-  var board = BoardLoader.getBoard(room);
-  res.render("board.html", {room:room, user:user, boardJson:JSON.stringify(board, null, 2)});
+  var board = BoardLoader.getConfig(room);
+  res.render("config.html", {room:room, user:user, boardJson:JSON.stringify(board, null, 2)});
 });
 
 router.get('/:room/commands', (req, res) => {
@@ -32,12 +32,12 @@ router.get('/:room/commands', (req, res) => {
   res.render("commands.html", {room:room, user:user});
 });
 
-router.post('/:room/board', (req, res) => {
+router.post('/:room/config', (req, res) => {
   var room = req.params.room;
   var user = req.cookies["user"];
   var boardJson = req.body.boardJson;
-  var board = BoardLoader.saveBoard(room, boardJson);
-  res.render("board.html", {room:room, user:user, boardJson:boardJson});
+  var board = BoardLoader.saveConfig(room, boardJson);
+  res.render("config.html", {room:room, user:user, boardJson:boardJson});
 });
 
 router.get('/:room', (req, res) => {
@@ -46,26 +46,26 @@ router.get('/:room', (req, res) => {
   res.render("room.html", {room:room, user:user});
 });
 
-router.get('/:room/tiles', async function (req, res) {
+router.get('/:room/asset', async function (req, res) {
   var room = req.params.room;
   var user = req.cookies["user"];
-  var tiles = await TileLoader.loadTiles();
-  res.render("tiles.html", {room:room, user:user, tiles:tiles});
+  var assets = await AssetLoader.loadAssets();
+  res.render("assets.html", {room:room, user:user, assets:assets});
 });
 
-router.post('/:room/tiles', async function (req, res) {
+router.post('/:room/asset', async function (req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
-  let tileFile = req.files.tileFile;
-  var destFilepath = `${DATA_ROOT}/tile/${tileFile.name}`;
-  tileFile.mv(destFilepath, function(err) {
+  let assetFile = req.files.assetFile;
+  var destFilepath = path.join(DATA_ROOT, tileFile.name);
+  assetFile.mv(destFilepath, function(err) {
     if (err)
       return res.status(500).send(err);
   });
   var room = req.params.room;
-  var tiles = await TileLoader.loadTiles();
-  res.render("tiles.html", {room:room, tiles:tiles});
+  var assets = await AssetLoader.loadAssets();
+  res.render("assets.html", {room:room, assets:assets});
 });
 
 module.exports = router;
