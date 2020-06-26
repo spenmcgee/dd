@@ -15,6 +15,7 @@ class Game {
     this.user = user;
     this.room = room;
     this.board = null;
+    this.iAmDM = user=='DM';
   }
 
   setupChat(chatEl, messagesEl) {
@@ -25,6 +26,7 @@ class Game {
       match: data => data.meta == 'join',
       action: data => {
         this.players[data.user] = data;
+        console.log("players", Object.keys(this.players))
       }
     })
   }

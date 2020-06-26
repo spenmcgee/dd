@@ -1,4 +1,4 @@
-
+import { BoardMovementControls } from '/client/js/BoardMovementControls.js';
 //import Snap
 
 class Board {
@@ -12,6 +12,12 @@ class Board {
     this.room = room;
     this.svgSelector = svgSelector;
     this.paper = null;
+    this.movementControls = new BoardMovementControls(
+      document.getElementById('up'),
+      document.getElementById('down'),
+      document.getElementById('left'),
+      document.getElementById('right'),
+    )
   }
 
   async getTileDimentions(tiles) {
@@ -25,18 +31,32 @@ class Board {
     })
   }
 
+  async loadSvg(url) {
+    return new Promise(r => Snap.load(url, data => r(data)));
+  }
+
   async init(el) {
     this.config = await this.getConfig(this.room);
     this.paper = Snap(this.svgSelector);
-    this.paper.text(650, 100, 'drag me');
+    //this.paper.text(650, 100, 'drag me');
+    var svgData = await this.loadSvg(`/asset/${this.config.boardSvg}`);
+    this.paper.append(svgData.node);
+    this.paper.zpd({drag:false});
 
-    Snap.load(`/asset/${this.config.boardSvg}`, data => {
-      //console.log("here is data", data);
-      this.paper.append(data.node);
-      //var g = this.paper.g(data);
-      //this.paper.append(g);
-      this.paper.zpd({ drag: false });
-    });
+    //var text = this.paper.text(630, 85, this.user);
+    var circ = this.paper.circle(650, 100, 10);
+    var piece = this.paper.group(circ);
+    //piece.mouseover(e => { alert('here')})
+    piece.altDrag();
+    this.paper.zpd('destroy');
+    this.paper.zpd();
+
+    document.getElementById('up').onmousedown = function () {
+      var m = piece.transform().localMatrix;
+      m.translate(0, 5);
+      piece.transform(m);
+    };
+
   }
 
   async getConfig(room) {

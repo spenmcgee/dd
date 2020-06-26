@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
 const ChatServer = require('./server/biz/ChatServer');
 const ChatController = require('./server/biz/ChatController');
+const GamesManager = require('./server/biz/GamesManager');
 
 var app = express();
 var httpServer = http.createServer(app);
@@ -25,8 +26,10 @@ app.use('/client', express.static('client'));
 app.use('/lib', express.static('node_modules'));
 app.use('/asset', express.static(DATA_ROOT));
 
+var gm = new GamesManager();
 var chatController = new ChatController();
 var chatServer = new ChatServer(3001, chatController);
+gm.wireupChat(chatController);
 
 console.log("(server) DATA_ROOT", DATA_ROOT);
 app.listen(3000, () => console.log(`Listening on 3000 and 3001`));

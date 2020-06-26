@@ -5,6 +5,15 @@ class ChatController {
   constructor() {
     this.users = {};
     this.rooms = {};
+    this.userJoinCallback = null;
+  }
+
+  onUserJoin(cb) {
+    this.userJoinCallback = cb;
+  }
+
+  sendTo(data, wss, client) {
+    
   }
 
   dispatch(data, wss, client) {
@@ -21,6 +30,8 @@ class ChatController {
         this.users[data.id] = user;
         if (!(data.room in this.rooms)) this.rooms[data.room] = [];
         this.rooms[data.room].push(user);
+        if (this.userJoinCallback)
+          this.userJoinCallback(user);
       }
     }
 
