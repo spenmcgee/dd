@@ -1,9 +1,22 @@
 const random = require('random');
 
-class CommandParser {
+class ChatRollEventHandler {
 
-  constructor() {
-    //this.msg = msg;
+  constructor(chatServer, rollCallback) {
+    this.wireup(chatServer, rollCallback);
+  }
+
+  wireup(chatServer) {
+    chatServer.addMessageListener((data, wss, ws) => {
+      var messageText = data.messageText;
+      var cmd = this.parse(messageText);
+      if (cmd) {
+        var results = this.execute(cmd);
+        var resultData = Object.assign(data, results);
+        return resultData;
+      }
+      return null;
+    })
   }
 
   execute(cmd) {
@@ -55,4 +68,4 @@ class CommandParser {
 
 }
 
-module.exports = CommandParser;
+module.exports = ChatRollEventHandler;
