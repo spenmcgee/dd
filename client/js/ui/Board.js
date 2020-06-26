@@ -1,4 +1,4 @@
-import { BoardMovementControls } from '/client/js/BoardMovementControls.js';
+import { BoardMovementControls } from '/client/js/ui/BoardMovementControls.js';
 //import Snap
 
 class Board {

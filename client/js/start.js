@@ -1,36 +1,21 @@
 import { Cookie } from '/client/js/Cookie.js';
-import { Game } from '/client/js/Game.js';
+import { Game } from '/client/js/ui/Game.js';
+import { WebsocketClient } from '/client/js/WebsocketClient.js';
 import Navigo from '/lib/navigo/lib/navigo.es.js';
+import snapPluginSetup from '/client/js/ui/snap.plugin.js';
 
 async function boardStart(room) {
 
-  eve.on("snap.drag.start", function(x, y, e) {
-    e.stopPropagation();
-  });
-  Snap.plugin( function( Snap, Element, Paper, global ) {
-    Element.prototype.altDrag = function() {
-      this.drag( dragMove, dragStart, dragEnd );
-      return this;
-    }
-    var dragStart = function ( x,y,ev ) {
-      this.data('origTransform', this.transform().local );
-    }
-    var dragMove = function(dx, dy, ev, x, y) {
-      var zoomPan = this.paper.zpd('save');
-      this.attr({
-        transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx / zoomPan.a, dy / zoomPan.a]
-      });
-    }
-    var dragEnd = function() {
-    }
-  });
+  snapPluginSetup();
 
   var id = Cookie.getCookie("id");
   var user = Cookie.getCookie("user");
   var room = Cookie.getCookie("room");
-  var game = new Game(id, user, room);
-  await game.setup();
 
+  var wsClient = new WebsocketClient();
+  var game = new Game(id, user, room, wsClient);
+  await game.setup();
+  wsClient.connect();
 }
 
 function navigation() {

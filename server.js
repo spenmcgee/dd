@@ -11,6 +11,7 @@ const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
 const ChatServer = require('./server/biz/ChatServer');
 const ChatJoinEventHandler = require('./server/biz/ChatJoinEventHandler');
 const ChatRollEventHandler = require('./server/biz/ChatRollEventHandler');
+const ChatTextEventHandler = require('./server/biz/ChatTextEventHandler');
 const GamesManager = require('./server/biz/GamesManager');
 
 var app = express();
@@ -29,12 +30,21 @@ app.use('/asset', express.static(DATA_ROOT));
 
 var gm = new GamesManager();
 var chatServer = new ChatServer(3001);
-//var chatController = new ChatController(chatServer);
-var joinHandler = new ChatJoinEventHandler(chatServer, user => {
-  gm.playerJoin(user);
-  chatServer.playerJoin(user);
-});
-var rollHandler = new ChatRollEventHandler(chatServer);
+chatServer.addHandler({
+  match: data => data.meta == 'join',
+  handler: new ChatJoinEventHandler(user => {
+    gm.playerJoin(user);
+    chatServer.playerJoin(user);
+  })
+})
+chatServer.addHandler({
+  match: data => data.meta == 'text',
+  handler: new ChatRollEventHandler()
+})
+chatServer.addHandler({
+  match: data => data.meta == 'text',
+  handler: new ChatTextEventHandler()
+})
 
 console.log("(server) DATA_ROOT", DATA_ROOT);
 app.listen(3000, () => console.log(`Listening on 3000 and 3001`));

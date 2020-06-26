@@ -5,6 +5,13 @@ class GamesManager {
     this.games = {};
   }
 
+  sendGameState(user) {
+    var client = user.client;
+    var room = user.room;
+    var gameState = this.getGame(room);
+    client.send(JSON.stringify(gameState));
+  }
+
   playerJoin(user) {
     var room = user.room;
     console.log(`(GamesManager.playerJoin) user ${user.user} joining ${user.room}`);
@@ -15,6 +22,7 @@ class GamesManager {
       this.games[room] = game;
     }
     game.addPlayer(user);
+    this.sendGameState(user);
   }
 
   getGame(room) {

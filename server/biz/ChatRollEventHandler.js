@@ -2,21 +2,18 @@ const random = require('random');
 
 class ChatRollEventHandler {
 
-  constructor(chatServer, rollCallback) {
-    this.wireup(chatServer, rollCallback);
+  constructor() {
   }
 
-  wireup(chatServer) {
-    chatServer.addMessageListener((data, wss, ws) => {
-      var messageText = data.messageText;
-      var cmd = this.parse(messageText);
-      if (cmd) {
-        var results = this.execute(cmd);
-        var resultData = Object.assign(data, results);
-        return resultData;
-      }
-      return null;
-    })
+  handle(data, wss, ws) {
+    var messageText = data.messageText;
+    var cmd = this.parse(messageText);
+    if (cmd) {
+      var results = this.execute(cmd);
+      var resultData = Object.assign(data, results);
+      return resultData;
+    }
+    return null;
   }
 
   execute(cmd) {
