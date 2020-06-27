@@ -1,5 +1,0 @@
-class BoardMovementControls {
-
-}
-
-export { BoardMovementControls }

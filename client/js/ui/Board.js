@@ -1,34 +1,15 @@
-import { BoardMovementControls } from '/client/js/ui/BoardMovementControls.js';
+import { Player } from '/client/js/data/Player.js';
 //import Snap
 
 class Board {
   constructor(user, room, svgSelector) {
     this.config = null;
-    this.tileDim = null;
     this.pieces = [];
-    this.canvas = null;
-    this.context = null;
     this.user = user;
+    this.players = {};
     this.room = room;
     this.svgSelector = svgSelector;
     this.paper = null;
-    this.movementControls = new BoardMovementControls(
-      document.getElementById('up'),
-      document.getElementById('down'),
-      document.getElementById('left'),
-      document.getElementById('right'),
-    )
-  }
-
-  async getTileDimentions(tiles) {
-    var tile0 = tiles[0][0];
-    var img = new Image();
-    img.src = `/tile/${tile0}.png`;
-    return new Promise(r => {
-      img.onload = function() {
-        r({width:this.width, height:this.height});
-      }
-    })
   }
 
   async loadSvg(url) {
@@ -50,6 +31,8 @@ class Board {
     piece.altDrag();
     this.paper.zpd('destroy');
     this.paper.zpd();
+
+    this.players[this.user] = new Player(this.user, piece);
 
     document.getElementById('up').onmousedown = function () {
       var m = piece.transform().localMatrix;
