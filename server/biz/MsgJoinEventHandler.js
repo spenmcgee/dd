@@ -1,5 +1,5 @@
 
-class ChatJoinEventHandler {
+class MsgJoinEventHandler {
 
   constructor(handlerCallback) {
     this.handlerCallback = handlerCallback;
@@ -20,4 +20,4 @@ class ChatJoinEventHandler {
 
 }
 
-module.exports = ChatJoinEventHandler;
+module.exports = MsgJoinEventHandler;

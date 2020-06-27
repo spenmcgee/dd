@@ -1,5 +1,5 @@
 
-class ChatTextEventHandler {
+class MsgTextEventHandler {
 
   constructor() {
   }
@@ -11,4 +11,4 @@ class ChatTextEventHandler {
 
 }
 
-module.exports = ChatTextEventHandler;
+module.exports = MsgTextEventHandler;

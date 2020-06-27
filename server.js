@@ -8,10 +8,10 @@ const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
-const ChatServer = require('./server/biz/ChatServer');
-const ChatJoinEventHandler = require('./server/biz/ChatJoinEventHandler');
-const ChatRollEventHandler = require('./server/biz/ChatRollEventHandler');
-const ChatTextEventHandler = require('./server/biz/ChatTextEventHandler');
+const MsgServer = require('./server/biz/MsgServer');
+const MsgJoinEventHandler = require('./server/biz/MsgJoinEventHandler');
+const MsgRollEventHandler = require('./server/biz/MsgRollEventHandler');
+const MsgTextEventHandler = require('./server/biz/MsgTextEventHandler');
 const GamesManager = require('./server/biz/GamesManager');
 
 var app = express();
@@ -29,21 +29,21 @@ app.use('/lib', express.static('node_modules'));
 app.use('/asset', express.static(DATA_ROOT));
 
 var gm = new GamesManager();
-var chatServer = new ChatServer(3001);
-chatServer.addHandler({
+var msgServer = new MsgServer(3001);
+msgServer.addHandler({
   match: data => data.meta == 'join',
-  handler: new ChatJoinEventHandler(user => {
+  handler: new MsgJoinEventHandler(user => {
     gm.playerJoin(user);
-    chatServer.playerJoin(user);
+    msgServer.playerJoin(user);
   })
 })
-chatServer.addHandler({
+msgServer.addHandler({
   match: data => data.meta == 'text',
-  handler: new ChatRollEventHandler()
+  handler: new MsgRollEventHandler()
 })
-chatServer.addHandler({
+msgServer.addHandler({
   match: data => data.meta == 'text',
-  handler: new ChatTextEventHandler()
+  handler: new MsgTextEventHandler()
 })
 
 console.log("(server) DATA_ROOT", DATA_ROOT);

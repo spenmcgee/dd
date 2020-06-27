@@ -1,6 +1,6 @@
 const random = require('random');
 
-class ChatRollEventHandler {
+class MsgRollEventHandler {
 
   constructor() {
   }
@@ -65,4 +65,4 @@ class ChatRollEventHandler {
 
 }
 
-module.exports = ChatRollEventHandler;
+module.exports = MsgRollEventHandler;

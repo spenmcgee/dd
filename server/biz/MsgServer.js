@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-class ChatServer {
+class MsgServer {
 
   constructor(port) {
     this.wss = new WebSocket.Server({ port: port });
@@ -51,4 +51,4 @@ class ChatServer {
 
 }
 
-module.exports = ChatServer;
+module.exports = MsgServer;
