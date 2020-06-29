@@ -10,7 +10,8 @@ var router = express.Router();
 router.get('/', (req, res) => {
   var room = req.cookies["room"];
   var user = req.cookies["user"];
-  res.render("home.html", {room:room, user:user})
+  var color = req.cookies["color"];
+  res.render("home.html", {room:room, user:user, color:color});
 });
 
 router.get('/api/:room/config', (req, res) => {
@@ -43,7 +44,8 @@ router.post('/:room/config', (req, res) => {
 router.get('/:room', (req, res) => {
   var room = req.params.room;
   var user = req.cookies["user"];
-  res.render("room.html", {room:room, user:user});
+  var color = req.cookies["color"];
+  res.render("room.html", {room:room, user:user, color:color});
 });
 
 router.get('/:room/asset', async function (req, res) {

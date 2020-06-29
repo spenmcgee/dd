@@ -12,6 +12,7 @@ const MsgServer = require('./server/biz/MsgServer');
 const MsgJoinEventHandler = require('./server/biz/MsgJoinEventHandler');
 const MsgRollEventHandler = require('./server/biz/MsgRollEventHandler');
 const MsgTextEventHandler = require('./server/biz/MsgTextEventHandler');
+const MsgMoveEventHandler = require('./server/biz/MsgMoveEventHandler');
 const GamesManager = require('./server/biz/GamesManager');
 
 var app = express();
@@ -32,10 +33,12 @@ var gm = new GamesManager();
 var msgServer = new MsgServer(3001);
 msgServer.addHandler({
   match: data => data.meta == 'join',
-  handler: new MsgJoinEventHandler(user => {
-    gm.playerJoin(user);
-    msgServer.playerJoin(user);
-  })
+  handler: (data, wss, client) => {
+    data.client = client;
+    var gameState = gm.playerJoin(data);
+    msgServer.addClient(data);
+    return [gameState];
+  }
 })
 msgServer.addHandler({
   match: data => data.meta == 'text',
@@ -44,6 +47,10 @@ msgServer.addHandler({
 msgServer.addHandler({
   match: data => data.meta == 'text',
   handler: new MsgTextEventHandler()
+})
+msgServer.addHandler({
+  match: data => data.meta == 'move',
+  handler: new MsgMoveEventHandler()
 })
 
 console.log("(server) DATA_ROOT", DATA_ROOT);

@@ -1,15 +1,8 @@
-const GameState = require("./GameState");
+const GameState = require("../data/GameState");
 
 class GamesManager {
   constructor() {
     this.games = {};
-  }
-
-  sendGameState(user) {
-    var client = user.client;
-    var room = user.room;
-    var gameState = this.getGame(room);
-    client.send(JSON.stringify(gameState));
   }
 
   playerJoin(user) {
@@ -22,7 +15,7 @@ class GamesManager {
       this.games[room] = game;
     }
     game.addPlayer(user);
-    this.sendGameState(user);
+    return game;
   }
 
   getGame(room) {

@@ -10,6 +10,10 @@ class GameState {
     this.players[player.user] = player;
   }
 
+  toString() {
+    return JSON.stringify(this);
+  }
+
 }
 
 module.exports = GameState;

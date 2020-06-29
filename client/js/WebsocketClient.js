@@ -15,6 +15,10 @@ class WebsocketClient {
     this.messageHandlers.push(handler);
   }
 
+  onOpen(handler) {
+    this.onOpenHandler = handler;
+  }
+
   send(data) {
     this.socket.send(data);
   }
@@ -25,7 +29,7 @@ class WebsocketClient {
     this.socket = socket;
     socket.onmessage = e => {
       let data = JSON.parse(e.data);
-      console.log(`(WebsocketClient#socket.onmessage) incoming ${data.meta}`);
+      console.log(`(WebsocketClient#socket.onmessage) incoming ${data.meta}`, data);
       this.messageHandlers.map(mh => {
         if (mh.match(data)) {
           if (typeof(mh.handler) == 'object')
@@ -36,8 +40,7 @@ class WebsocketClient {
       })
     }
     socket.onopen = e => {
-      this.send(new Join());
-      this.send(new Text("joining room"));
+      this.onOpenHandler(e);
     }
   }
 
