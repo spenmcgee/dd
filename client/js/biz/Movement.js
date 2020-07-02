@@ -3,9 +3,9 @@ import { Move } from '../data/Move.js';
 
 class Movement {
 
-  constructor(userId, messages, board, players) {
+  constructor(userId, messages, piece, players) {
     this.messages = messages;
-    this.board = board;
+    this.piece = piece;
     this.players = players;
     this.userId = userId;
   }
@@ -17,13 +17,12 @@ class Movement {
   }
 
   move(direction) {
-    var piece = this.board.piece;
-    var m = piece.transform().localMatrix;
+    var piece = this.piece;
+    var m = piece.snapSvgGroup.transform().localMatrix;
     m.translate(0, 5);
-    piece.transform(m);
+    piece.snapSvgGroup.transform(m);
 
-    var localMatrix = piece.transform().localMatrix;
-    var d = new Move(direction, localMatrix);
+    var d = new Move(direction, m);
     this.messages.sendToServer(d);
   }
 

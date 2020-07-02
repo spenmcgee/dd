@@ -7,8 +7,6 @@ class Messages {
     this.user = Cookie.getCookie('user');
     this.room = Cookie.getCookie('room');
     this.client = wsClient;
-    this.players = [];
-    this.rooms = {};
   }
 
   buildData(data) {
@@ -17,13 +15,6 @@ class Messages {
     clone.user = this.user;
     clone.room = this.room;
     return clone;
-  }
-
-  addPlayer(user) {
-    if (!(user.room in this.rooms))
-      this.rooms[user.room] = [];
-    this.rooms[user.room].push(user);
-    this.players.push(user);
   }
 
   sendToServer(data) {

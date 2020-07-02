@@ -1,36 +1,32 @@
 import { Board } from '/client/js/ui/Board.js';
-import { Piece } from '/client/js/data/Piece.js';
 import { Chat } from '/client/js/ui/Chat.js';
 import { MoveControls } from '/client/js/ui/MoveControls.js';
 import { Messages } from '/client/js/biz/Messages.js';
 import { Movement } from '/client/js/biz/Movement.js';
 import { Text } from '/client/js/data/Text.js';
 import { Join } from '/client/js/data/Join.js';
-
-function removeFromArray(arr) {
-  var what, a = arguments, L = a.length, ax;
-  while (L > 1 && arr.length) {
-    what = a[--L];
-    while ((ax= arr.indexOf(what)) !== -1) {
-      arr.splice(ax, 1);
-    }
-  }
-  return arr;
-}
+import { Move } from '/client/js/data/Move.js';
+import { Player } from '/client/js/data/Player.js';
 
 class Game {
 
   constructor(id, user, room, color, wsClient) {
     this.config = {};
-    this.players = {};
     this.id = id;
     this.user = user;
     this.room = room;
-    this.board = null;
+    this.color = color;
+    this.players = {};
+    this.board = new Board(this.user, this.room, "#board");
     this.iAmDM = user=='DM';
     this.wsClient = wsClient;
-    this.piece = new Piece(user, color, 100, 100);
-    this.state = null;
+  }
+
+  addPlayer(player) {
+    if (!(this.id in this.players)) {
+      this.players[player.id] = player;
+      this.board.drawPlayer(player);
+    }
   }
 
   async setup() {
@@ -40,46 +36,72 @@ class Game {
     var messages = new Messages(this.wsClient);
     var moveControls = new MoveControls();
 
-    this.board = new Board(this.user, this.room, "#board");
-    await this.board.init(mainEl);
+    await this.board.drawBoard(mainEl);
 
-    var group = this.board.addPiece(this.piece);
-    this.piece.localMatrix = group.transform().localMatrix;
-    this.piece.snapSvg = group;
+    this.addPlayer(new Player(this.board.paper, this.id, this.room, this.color));
 
     var formEl = document.getElementById("chat");
     var messagesEl = document.getElementById("messages");
     this.chat = new Chat(formEl, messagesEl, this.wsClient);
 
     this.wsClient.onOpen(e => {
-      //messages.sendToServer(new Handshake());
-      messages.sendToServer(new Join(this.piece));
+      messages.sendToServer(new Join(this.color));
       messages.sendToServer(new Text("joining room"));
     })
 
-    this.wsClient.addMessageHandler({
-      match: data => data.meta == 'join',
-      handler: data => {
-        this.players[data.user] = data;//Object.assign({})
-        console.log("players", this.players)
-      }
-    })
+    // this.wsClient.addMessageHandler({
+    //   match: data => data.meta == 'join',
+    //   handler: data => {
+    //     this.players[data.user] = data;//Object.assign({})
+    //     console.log("players", this.players)
+    //   }
+    // })
 
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'text',
       handler: this.chat
     })
 
-    this.movement = new Movement(this.id, messages, this.board, this.players);
+    this.movement = new Movement(this.id, messages, this.piece, this.players);
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'move',
       handler: this.movement
     })
 
     moveControls.onMove(direction => {
-      this.movement.move(direction);
+      var player = this.players[this.id];
+      var localMatrix = this.board.movePlayer(player, direction);
+      //this.board.drawPlayer(player);
+
+      var d = new Move(localMatrix);
+      messages.sendToServer(d);
     })
 
+    this.wsClient.addMessageHandler({
+      match: data => data.meta == 'game-state',
+      handler: data => {
+        this.mergeGameState(data);
+        var players = Object.keys(this.players).map(id => this.players[id]);
+        this.board.redrawPlayers(players);
+      }
+    })
+
+  }
+
+  mergeGameState(data) {
+    data.players.forEach(p => {
+      if (!(p.id in this.players)) {
+        this.addPlayer(new Player(this.board.paper, p.id, p.room, p.color));
+      } else {
+        this.players[p.id].color = p.color;
+        this.players[p.id].localMatrix = p.localMatrix;
+      }
+    })
+  }
+
+  drawPlayers(data) {
+    var players = Object.keys(this.players).map(id => this.players[id]);
+    players.forEach(player => this.board.drawPlayer(player));
   }
 
 }

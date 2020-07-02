@@ -9,11 +9,25 @@ class MsgServer {
     this.rooms = {};
   }
 
-  addClient(user) {
+  roomHasPlayer(room, id) {
+    return this.rooms[room].reduce((o,p) => ((p.id==id)||o), false);
+  }
+
+  setClient(user, client) {
     if (!(user.room in this.rooms)) {
       this.rooms[user.room] = [];
     }
-    this.rooms[user.room].push(user);
+    if (!(this.roomHasPlayer(user.room, user.id))) {
+      this.rooms[user.room].push({
+        id: user.id,
+        client: client
+      });
+    } else {
+      this.rooms[user.room].forEach(p => {
+        if (p.id == user.id)
+          p.client = client;
+      })
+    }
   }
 
   addHandler(handler) {
@@ -26,7 +40,7 @@ class MsgServer {
       if (outboundRoom in this.rooms) {
         this.rooms[outboundRoom].forEach(user => {
           if (user.client.readyState === WebSocket.OPEN) {
-            //console.log(`(MsgServer.broadcast) sending to ${user.id}`);
+            console.log(`(MsgServer.broadcast) sending to ${user.id}`);
             user.client.send(JSON.stringify(outboundData));
           }
         })
@@ -39,7 +53,6 @@ class MsgServer {
     var data = JSON.parse(json);
     var outboundDataArray = this.messageHandlers.map(h => {
       if (h.match(data)) {
-        console.log("here checking", typeof(h.handler))
         if (typeof(h.handler) == 'object')
           return h.handler.handle(data, wss, ws);
         else
@@ -48,7 +61,8 @@ class MsgServer {
     })
     .flat()
     .filter(x=>x);
-    console.log("(MsgServer.onMessage) outbound data", outboundDataArray);
+    outboundDataArray = outboundDataArray.map(x => x.projectForWire ? x.projectForWire() : x);
+    console.log("(MsgServer.onMessage) outbound data", JSON.stringify(outboundDataArray));
     this.broadcast(outboundDataArray);
   }
 

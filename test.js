@@ -1,12 +1,5 @@
-class X {
-  constructor() {
-    this.x = 55;
-  }
-  toString() {
-    return JSON.stringify(this);
-  }
-}
+var x = {a:1,b:2,c:3}
 
-var k = new X();
-console.log(k)
-console.log(`here ${k} is k`)
+for (k in x) {
+  console.log("here", k, x)
+}

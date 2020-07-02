@@ -2,10 +2,10 @@ import { Message } from './Message.js';
 
 class Join extends Message {
 
-  constructor(piece) {
+  constructor(color) {
     super();
     this.meta = 'join';
-    this.piece = piece;
+    this.color = color;
   }
 
   toString() {
@@ -14,13 +14,7 @@ class Join extends Message {
       id: this.id,
       room: this.room,
       user: this.user,
-      color: this.color,
-      piece: {
-        color: this.piece.color,
-        x: this.piece.x,
-        y: this.piece.y,
-        //localMatrix: this.piece.snapSvgGroup.transform().localMatrix
-      }
+      color: this.color
     }
     return JSON.stringify(data);
   }

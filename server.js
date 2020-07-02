@@ -9,10 +9,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
 const MsgServer = require('./server/biz/MsgServer');
-const MsgJoinEventHandler = require('./server/biz/MsgJoinEventHandler');
 const MsgRollEventHandler = require('./server/biz/MsgRollEventHandler');
-const MsgTextEventHandler = require('./server/biz/MsgTextEventHandler');
-const MsgMoveEventHandler = require('./server/biz/MsgMoveEventHandler');
 const GamesManager = require('./server/biz/GamesManager');
 
 var app = express();
@@ -34,10 +31,10 @@ var msgServer = new MsgServer(3001);
 msgServer.addHandler({
   match: data => data.meta == 'join',
   handler: (data, wss, client) => {
-    data.client = client;
-    var gameState = gm.playerJoin(data);
-    msgServer.addClient(data);
-    return [gameState];
+    var gs = gm.getGameState(data.room);
+    gs.addPlayer(data);
+    msgServer.setClient(data, client);
+    return [gs];
   }
 })
 msgServer.addHandler({
@@ -46,11 +43,17 @@ msgServer.addHandler({
 })
 msgServer.addHandler({
   match: data => data.meta == 'text',
-  handler: new MsgTextEventHandler()
+  handler: (data, wss, ws) => {
+    return [data];
+  }
 })
 msgServer.addHandler({
   match: data => data.meta == 'move',
-  handler: new MsgMoveEventHandler()
+  handler: (data, wss, ws) => {
+    var gs = gm.getGameState(data.room);
+    gs.applyMove(data);
+    return [gs];
+  }
 })
 
 console.log("(server) DATA_ROOT", DATA_ROOT);

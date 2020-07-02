@@ -2,10 +2,9 @@ import { Message } from './Message.js';
 
 class Move extends Message {
 
-  constructor(direction, localMatrix) {
+  constructor(localMatrix) {
     super();
     this.meta = 'move';
-    this.direction = direction;
     this.localMatrix = localMatrix;
   }
 
