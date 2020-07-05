@@ -10,6 +10,18 @@ class MoveControls {
     this.downEl.addEventListener('click', this.move(0,1,0,0))
     this.leftEl.addEventListener('click', this.move(0,0,1,0))
     this.rightEl.addEventListener('click', this.move(0,0,0,1))
+
+    document.addEventListener('keydown', e => {
+      if (e.keyCode == 38) { //up
+        this.cb([1,0,0,0]);
+      } else if (e.keyCode == 40) { //down
+        this.cb([0,1,0,0]);
+      } else if (e.keyCode == 37) { //left
+         this.cb([0,0,1,0]);
+      } else if (e.keyCode == 39) { //right
+         this.cb([0,0,0,1]);
+      }
+    })
   }
 
   move(u,d,l,r) {

@@ -15,4 +15,5 @@
 ## deploy
 
 * on node: `docker pull <namespace>/dd`
+* `docker rm -f dd1`
 * `docker run --restart=always -d -v /var/dd:/var/dd -p 80:3000 -p 3001:3001 -e "DATA_ROOT=/var/dd" --name=dd1 <namespace>/dd`
