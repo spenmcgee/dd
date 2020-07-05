@@ -48,9 +48,13 @@ class Board {
     group.altDrag();
     this.paper.zpd('destroy');
     this.paper.zpd();
-    p.localMatrix = group.transform().localMatrix;
     p.snapSvgGroup = group;
     this.playerSvgTable[p.id] = group;
+    if (p.localMatrix) {
+      this.transformPlayer(p, p.localMatrix);
+    } else {
+      p.localMatrix = group.transform().localMatrix;
+    }
     return group;
   }
 

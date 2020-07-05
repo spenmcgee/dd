@@ -23,7 +23,7 @@ class Game {
   }
 
   addPlayer(player) {
-    if (!(this.id in this.players)) {
+    if (!(player.id in this.players)) {
       this.players[player.id] = player;
       this.board.drawPlayer(player);
     }
@@ -82,6 +82,7 @@ class Game {
       handler: data => {
         this.mergeGameState(data);
         var players = Object.keys(this.players).map(id => this.players[id]);
+        console.log("addMessageHandler#game-state", players);
         this.board.redrawPlayers(players);
       }
     })
@@ -90,19 +91,22 @@ class Game {
 
   mergeGameState(data) {
     data.players.forEach(p => {
+      console.log("mergeGameState", p.id, p);
       if (!(p.id in this.players)) {
-        this.addPlayer(new Player(this.board.paper, p.id, p.room, p.color));
+        console.log("mergeGameState case1", p.id);
+        this.addPlayer(new Player(this.board.paper, p.id, p.room, p.color, p.localMatrix));
       } else {
+        console.log("mergeGameState case2", p.id);
         this.players[p.id].color = p.color;
         this.players[p.id].localMatrix = p.localMatrix;
       }
     })
   }
 
-  drawPlayers(data) {
-    var players = Object.keys(this.players).map(id => this.players[id]);
-    players.forEach(player => this.board.drawPlayer(player));
-  }
+  // drawPlayers(data) {
+  //   var players = Object.keys(this.players).map(id => this.players[id]);
+  //   players.forEach(player => this.board.drawPlayer(player));
+  // }
 
 }
 

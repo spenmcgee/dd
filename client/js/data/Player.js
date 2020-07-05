@@ -1,13 +1,13 @@
 class Player {
 
-  constructor(paper, id, room, color) {
+  constructor(paper, id, room, color, localMatrix) {
     this.paper = paper;
     this.id = id;
     this.room = room;
     this.color = color;
     this.x = 100;
     this.y = 100;
-    this.localMatrix = null;
+    this.localMatrix = localMatrix;
     this.snapSvgGroup = null;
   }
 
