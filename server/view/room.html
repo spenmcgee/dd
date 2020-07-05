@@ -12,8 +12,7 @@
 <button id="right">right</button>
 {% endblock %}
 
-{% block main %}
-<svg id="board"></svg>
+{% block absolute %}
 <div id="chat-column">
   <form name="chat" id="chat">
     <input type="text" name="message">
@@ -21,4 +20,8 @@
   </form>
   <div id="messages"></div>
 </div>
+{% endblock %}
+
+{% block main %}
+<svg id="board"></svg>
 {% endblock %}

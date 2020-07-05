@@ -71,7 +71,6 @@ class Game {
     moveControls.onMove(direction => {
       var player = this.players[this.id];
       var localMatrix = this.board.movePlayer(player, direction);
-      //this.board.drawPlayer(player);
 
       var d = new Move(localMatrix);
       messages.sendToServer(d);
@@ -82,7 +81,6 @@ class Game {
       handler: data => {
         this.mergeGameState(data);
         var players = Object.keys(this.players).map(id => this.players[id]);
-        console.log("addMessageHandler#game-state", players);
         this.board.redrawPlayers(players);
       }
     })
@@ -91,12 +89,9 @@ class Game {
 
   mergeGameState(data) {
     data.players.forEach(p => {
-      console.log("mergeGameState", p.id, p);
       if (!(p.id in this.players)) {
-        console.log("mergeGameState case1", p.id);
         this.addPlayer(new Player(this.board.paper, p.id, p.room, p.color, p.localMatrix));
       } else {
-        console.log("mergeGameState case2", p.id);
         this.players[p.id].color = p.color;
         this.players[p.id].localMatrix = p.localMatrix;
       }

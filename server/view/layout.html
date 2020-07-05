@@ -14,6 +14,12 @@
     position: absolute;
     width: 100%;
   }
+  #menu a {
+    text-decoration: none;
+  }
+  .abs {
+    margin-top: 40px;
+  }
   #chat-column {
     position: absolute;
     top: 3px;
@@ -21,7 +27,7 @@
     background-color: #FF70A2;
     padding: 10px;
     width: 300px;
-    z-index: 2;
+    z-index: 10;
   }
   #chat-column .messages-item {
     padding: 5px;
@@ -53,6 +59,9 @@
   {% block menu %}
   {% endblock %}
 </div>
+
+{% block absolute %}
+{% endblock %}
 
 <div id="main">
 {% block main %}
