@@ -24,9 +24,9 @@ function navigation() {
   var nav = new Navigo("/");
   nav.on(":room/board", params => {
   })
-  nav.on(":room/tiles", params => {
-  })
   nav.on(":room/commands", params => {
+  })
+  nav.on(":room/asset", params => {
   })
   .on(":room", params => {
     console.log("route :room", params);

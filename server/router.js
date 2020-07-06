@@ -60,14 +60,15 @@ router.post('/:room/asset', async function (req, res) {
     return res.status(400).send('No files were uploaded.');
   }
   let assetFile = req.files.assetFile;
-  var destFilepath = path.join(DATA_ROOT, tileFile.name);
+  var destFilepath = path.join(DATA_ROOT, assetFile.name);
   assetFile.mv(destFilepath, function(err) {
     if (err)
       return res.status(500).send(err);
   });
   var room = req.params.room;
+  var user = req.cookies["user"];
   var assets = await AssetLoader.loadAssets();
-  res.render("assets.html", {room:room, assets:assets});
+  res.render("assets.html", {room:room, user:user, assets:assets});
 });
 
 module.exports = router;
