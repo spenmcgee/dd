@@ -1,10 +1,15 @@
 class MoveControls {
 
   constructor() {
-    var upEl = document.getElementById('up');
-    var downEl = document.getElementById('down');
-    var leftEl = document.getElementById('left');
-    var rightEl = document.getElementById('right');
+    var upEl = document.createElement('button');
+    var downEl = document.createElement('button');
+    var leftEl = document.createElement('button');
+    var rightEl = document.createElement('button');
+
+    upEl.append("up");
+    downEl.append("down");
+    leftEl.append("left");
+    rightEl.append("right");
 
     this.el = document.createElement('span');
     this.el.append(upEl);

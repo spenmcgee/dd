@@ -2,7 +2,6 @@ import { Board } from '/client/js/ui/Board.js';
 import { Chat } from '/client/js/ui/Chat.js';
 import { MoveControls } from '/client/js/ui/MoveControls.js';
 import { Messages } from '/client/js/biz/Messages.js';
-import { Movement } from '/client/js/biz/Movement.js';
 import { Text } from '/client/js/data/Text.js';
 import { Join } from '/client/js/data/Join.js';
 import { Move } from '/client/js/data/Move.js';
@@ -29,47 +28,43 @@ class Game {
     }
   }
 
+  async setupPlayer(messages) {
+    var menuEl = document.getElementById("menu");
+    var moveControls = new MoveControls();
+    menuEl.append(moveControls.el);
+    moveControls.onMove(direction => {
+      var player = this.players[this.id];
+      var localMatrix = this.board.movePlayer(player, direction);
+      var d = new Move(localMatrix);
+      messages.sendToServer(d);
+    })
+    this.addPlayer(new Player(this.board.paper, this.id, this.room, this.color));
+    this.wsClient.onOpen(e => {
+      messages.sendToServer(new Join(this.color));
+      messages.sendToServer(new Text("joining room"));
+    })
+  }
+
+  async setupDM(messages) {
+    this.wsClient.onOpen(e => {
+      messages.sendToServer(new Text("joining room"));
+    })
+  }
+
   async setup() {
 
-    var mainEl = document.getElementById("main");
-    var menuEl = document.getElementById("menu");
-
     var messages = new Messages(this.wsClient);
-    if (this.isDM) {
 
-    } else {
-      var moveControls = new MoveControls();
-      menuEl.append(moveControls.el);
-      moveControls.onMove(direction => {
-        var player = this.players[this.id];
-        var localMatrix = this.board.movePlayer(player, direction);
-        var d = new Move(localMatrix);
-        messages.sendToServer(d);
-      })
-    }
-
+    var mainEl = document.getElementById("main");
     await this.board.drawBoard(mainEl);
-
-    this.addPlayer(new Player(this.board.paper, this.id, this.room, this.color));
 
     var formEl = document.getElementById("chat");
     var messagesEl = document.getElementById("messages");
     this.chat = new Chat(formEl, messagesEl, this.wsClient);
 
-    this.wsClient.onOpen(e => {
-      messages.sendToServer(new Join(this.color));
-      messages.sendToServer(new Text("joining room"));
-    })
-
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'text',
       handler: this.chat
-    })
-
-    this.movement = new Movement(this.id, messages, this.piece, this.players);
-    this.wsClient.addMessageHandler({
-      match: data => data.meta == 'move',
-      handler: this.movement
     })
 
     this.wsClient.addMessageHandler({
@@ -80,6 +75,12 @@ class Game {
         this.board.redrawPlayers(players);
       }
     })
+
+    if (this.isDM) {
+      await this.setupDM(messages);
+    } else {
+      await this.setupPlayer(messages);
+    }
 
   }
 
