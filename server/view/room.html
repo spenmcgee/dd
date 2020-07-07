@@ -33,13 +33,16 @@
     margin-bottom: 5px;
     background: rgba(255, 255, 255, 0.5);
   }
-  #room-menu {
+  #menu {
     z-index: 2;
     padding: 10px;
     position: absolute;
     top: 3px;
     left: 3px;
     backdrop-filter: contrast(0.9);
+  }
+  #menu button {
+    margin-right: 3px;
   }
 </style>
 <script type="text/javascript" src="/lib/snapsvg/dist/snap.svg.js"></script>
@@ -54,14 +57,14 @@
 
 <body>
 
-<div id="room-menu">
+<div id="menu">
   <span style="padding:5px; background-color:yellow; margin-right:10px;">{{user}}@{{room}}</span>
   <a href="/">Start</a> /
   <a href="/{{room}}/commands">Commands</a> /
-  <button id="up">up</button>
-  <button id="down">down</button>
-  <button id="left">left</button>
-  <button id="right">right</button>
+  {% if isDM %}
+    <a href="/{{room}}/config">Config</a> /
+    <a href="/{{room}}/asset">Assets</a> /
+  {% endif %}
 </div>
 
 <div id="chat-column">

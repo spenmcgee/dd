@@ -61,7 +61,7 @@ class Board {
   async drawBoard(el) {
     this.config = await this.getConfig(this.room);
     //this.paper.text(650, 100, 'drag me');
-    var svgData = await this.loadSvg(`/asset/${this.config.boardSvg}`);
+    var svgData = await this.loadSvg(this.config.boardSvg);
     this.paper.append(svgData.node);
     this.paper.zpd({drag:false});
   }

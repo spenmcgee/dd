@@ -4,7 +4,7 @@
 
 <h1>Assets</h1>
 <h2>Add Asset</h2>
-<form method="post" enctype="multipart/form-data">
+<form method="post" action="/{{room}}/asset" enctype="multipart/form-data">
   <input type="file" name="assetFile"> <input type="submit" value="Add Asset">
 </form>
 
@@ -12,8 +12,9 @@
 <table>
 {% for asset in assets %}
   <tr>
-    <td><img src="/asse/{{asset}}" alt="{{asset}}" width="100" height="100"></td>
+    <td><img src="/asset/{{asset}}" alt="{{asset}}" width="100" height="100"></td>
     <td><a href="/asset/{{asset}}" alt="{{asset}}">{{asset}}</a></td>
+    <td><a href="/asset/{{asset}}/delete" alt="{{asset}}">delete</a></td>
   </tr>
 {% endfor %}
 </table>

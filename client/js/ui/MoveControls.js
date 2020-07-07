@@ -1,15 +1,21 @@
 class MoveControls {
 
   constructor() {
-    this.upEl = document.getElementById('up');
-    this.downEl = document.getElementById('down');
-    this.leftEl = document.getElementById('left');
-    this.rightEl = document.getElementById('right');
+    var upEl = document.getElementById('up');
+    var downEl = document.getElementById('down');
+    var leftEl = document.getElementById('left');
+    var rightEl = document.getElementById('right');
 
-    this.upEl.addEventListener('click', this.move(1,0,0,0))
-    this.downEl.addEventListener('click', this.move(0,1,0,0))
-    this.leftEl.addEventListener('click', this.move(0,0,1,0))
-    this.rightEl.addEventListener('click', this.move(0,0,0,1))
+    this.el = document.createElement('span');
+    this.el.append(upEl);
+    this.el.append(downEl);
+    this.el.append(leftEl);
+    this.el.append(rightEl);
+
+    upEl.addEventListener('click', this.move(1,0,0,0));
+    downEl.addEventListener('click', this.move(0,1,0,0));
+    leftEl.addEventListener('click', this.move(0,0,1,0));
+    rightEl.addEventListener('click', this.move(0,0,0,1));
 
     document.addEventListener('keydown', e => {
       if (e.keyCode == 38) { //up

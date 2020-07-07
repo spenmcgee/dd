@@ -32,9 +32,21 @@ class Game {
   async setup() {
 
     var mainEl = document.getElementById("main");
+    var menuEl = document.getElementById("menu");
 
     var messages = new Messages(this.wsClient);
-    var moveControls = new MoveControls();
+    if (this.isDM) {
+
+    } else {
+      var moveControls = new MoveControls();
+      menuEl.append(moveControls.el);
+      moveControls.onMove(direction => {
+        var player = this.players[this.id];
+        var localMatrix = this.board.movePlayer(player, direction);
+        var d = new Move(localMatrix);
+        messages.sendToServer(d);
+      })
+    }
 
     await this.board.drawBoard(mainEl);
 
@@ -58,14 +70,6 @@ class Game {
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'move',
       handler: this.movement
-    })
-
-    moveControls.onMove(direction => {
-      var player = this.players[this.id];
-      var localMatrix = this.board.movePlayer(player, direction);
-
-      var d = new Move(localMatrix);
-      messages.sendToServer(d);
     })
 
     this.wsClient.addMessageHandler({
