@@ -4,6 +4,7 @@ class GameState {
     this.meta = 'game-state';
     this.room = room;
     this.players = [];
+    this.dm = null;
   }
 
   hasPlayer(id) {
@@ -13,6 +14,10 @@ class GameState {
   addPlayer(player) {
     if (!this.hasPlayer(player.id))
       this.players.push(player);
+  }
+
+  addDM(data) {
+    this.dm = data;
   }
 
   applyMove(data) {

@@ -32,7 +32,10 @@ msgServer.addHandler({
   match: data => data.meta == 'join',
   handler: (data, wss, client) => {
     var gs = gm.getGameState(data.room);
-    gs.addPlayer(data);
+    if (data.user == 'DM')
+      gs.addDM(data);
+    else
+      gs.addPlayer(data);
     msgServer.setClient(data, client);
     return [gs];
   }

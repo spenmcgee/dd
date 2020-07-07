@@ -47,6 +47,7 @@ class Game {
 
   async setupDM(messages) {
     this.wsClient.onOpen(e => {
+      messages.sendToServer(new Join(this.color));
       messages.sendToServer(new Text("joining room"));
     })
   }
