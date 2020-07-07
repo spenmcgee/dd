@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block absolute %}
+{% block main %}
 
 <h1>Assets</h1>
 <h2>Add Asset</h2>
@@ -9,8 +9,13 @@
 </form>
 
 <h2>Asset List</h2>
+<table>
 {% for asset in assets %}
-  <br><a href="/asset/{{asset}}" alt="{{asset}}">{{asset}}</a>
+  <tr>
+    <td><img src="/asse/{{asset}}" alt="{{asset}}" width="100" height="100"></td>
+    <td><a href="/asset/{{asset}}" alt="{{asset}}">{{asset}}</a></td>
+  </tr>
 {% endfor %}
+</table>
 
 {% endblock %}

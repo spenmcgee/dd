@@ -1,49 +1,25 @@
 <html>
 <head>
 <title>DD</title>
+
 <style>
   html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
   }
   #menu {
     background-color: cyan;
     padding: 10px;
     z-index: 1;
-    position: absolute;
     width: 100%;
   }
   #menu a {
     text-decoration: none;
   }
-  .abs {
-    margin-top: 10px;
+  #main {
     padding: 30px;
   }
-  #chat-column {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    background-color: #FF70A2;
-    padding: 10px;
-    width: 300px;
-    z-index: 10;
-  }
-  #chat-column .messages-item {
-    padding: 5px;
-    background-color: #ccc;
-    margin-bottom: 5px;
-  }
-  svg { position:fixed; top:40; left:0; height:100%; width:100%; background-color:#eee; z-index: 0; }
 </style>
-
-<script type="module">
-  import { start } from '/client/js/start.js';
-  document.addEventListener("DOMContentLoaded", function(event) {
-    start();
-  });
-</script>
 
 {% block head %}
 {% endblock %}
@@ -63,11 +39,6 @@
   {% endif %}
   {% block menu %}
   {% endblock %}
-</div>
-
-<div class="abs">
-{% block absolute %}
-{% endblock %}
 </div>
 
 <div id="main">

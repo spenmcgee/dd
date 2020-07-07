@@ -22,10 +22,15 @@ class Chat {
   }
 
   handle(data) {
+    let messageElemBg = document.createElement('div');
+    messageElemBg.classList.add('messages-item-bg');
+
     let messageElem = document.createElement('div');
     messageElem.classList.add('messages-item');
     messageElem.textContent = `${data.user}: ${data.messageText}`;
-    this.messagesEl.prepend(messageElem);
+
+    messageElemBg.prepend(messageElem);
+    this.messagesEl.prepend(messageElemBg);
   }
 
 }

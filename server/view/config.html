@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 
-{% block absolute %}
+{% block main %}
+
 <h1>Config</h1>
 <form method="post">
   <textarea name="boardJson" rows="20" cols="80">{{boardJson}}</textarea>
   <br>
   <button type="submit">Save</button>
 </form>
+
 {% endblock %}

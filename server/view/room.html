@@ -1,18 +1,69 @@
-{% extends "layout.html" %}
-
-{% block head %}
+<html>
+<head>
+<title>DD</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  svg {
+    position:fixed;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+    background-color:#eee;
+    z-index: 0;
+  }
+  #chat-column {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    padding: 10px;
+    width: 300px;
+    z-index: 10;
+    backdrop-filter: contrast(0.9);
+  }
+  #chat-column .messages-item {
+    color: rgba(0, 0, 0, 1);
+  }
+  #chat-column .messages-item-bg {
+    padding: 5px;
+    margin-bottom: 5px;
+    background: rgba(255, 255, 255, 0.5);
+  }
+  #room-menu {
+    z-index: 2;
+    padding: 10px;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    backdrop-filter: contrast(0.9);
+  }
+</style>
 <script type="text/javascript" src="/lib/snapsvg/dist/snap.svg.js"></script>
 <script type="text/javascript" src="/lib/snap.svg.zpd/snap.svg.zpd.js"></script>
-{% endblock %}
+<script type="module">
+  import { start } from '/client/js/start.js';
+  document.addEventListener("DOMContentLoaded", function(event) {
+    start();
+  });
+</script>
+</head>
 
-{% block menu %}
-<button id="up">up</button>
-<button id="down">down</button>
-<button id="left">left</button>
-<button id="right">right</button>
-{% endblock %}
+<body>
 
-{% block absolute %}
+<div id="room-menu">
+  <span style="padding:5px; background-color:yellow; margin-right:10px;">{{user}}@{{room}}</span>
+  <a href="/">Start</a> /
+  <a href="/{{room}}/commands">Commands</a> /
+  <button id="up">up</button>
+  <button id="down">down</button>
+  <button id="left">left</button>
+  <button id="right">right</button>
+</div>
+
 <div id="chat-column">
   <form name="chat" id="chat">
     <input type="text" name="message">
@@ -20,8 +71,8 @@
   </form>
   <div id="messages"></div>
 </div>
-{% endblock %}
 
-{% block main %}
 <svg id="board"></svg>
-{% endblock %}
+
+</body>
+</html>
