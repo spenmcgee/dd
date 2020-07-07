@@ -11,7 +11,8 @@ router.get('/', (req, res) => {
   var room = req.cookies["room"];
   var user = req.cookies["user"];
   var color = req.cookies["color"];
-  res.render("home.html", {room:room, user:user, color:color});
+  var isDM = user=='DM';
+  res.render("home.html", {room:room, user:user, color:color, isDM:isDM});
 });
 
 router.get('/api/:room/config', (req, res) => {
@@ -23,36 +24,32 @@ router.get('/api/:room/config', (req, res) => {
 router.get('/:room/config', (req, res) => {
   var room = req.params.room;
   var user = req.cookies["user"];
+  var isDM = user=='DM';
   var board = BoardLoader.getConfig(room);
-  res.render("config.html", {room:room, user:user, boardJson:JSON.stringify(board, null, 2)});
+  res.render("config.html", {room:room, user:user, isDM:isDM, boardJson:JSON.stringify(board, null, 2)});
 });
 
 router.get('/:room/commands', (req, res) => {
   var room = req.params.room;
   var user = req.cookies["user"];
-  res.render("commands.html", {room:room, user:user});
-});
-
-router.post('/:room/config', (req, res) => {
-  var room = req.params.room;
-  var user = req.cookies["user"];
-  var boardJson = req.body.boardJson;
-  var board = BoardLoader.saveConfig(room, boardJson);
-  res.render("config.html", {room:room, user:user, boardJson:boardJson});
+  var isDM = user=='DM';
+  res.render("commands.html", {room:room, user:user, isDM:isDM});
 });
 
 router.get('/:room', (req, res) => {
   var room = req.params.room;
   var user = req.cookies["user"];
   var color = req.cookies["color"];
-  res.render("room.html", {room:room, user:user, color:color});
+  var isDM = user=='DM';
+  res.render("room.html", {room:room, user:user, color:color, isDM:isDM});
 });
 
 router.get('/:room/asset', async function (req, res) {
   var room = req.params.room;
   var user = req.cookies["user"];
+  var isDM = user=='DM';
   var assets = await AssetLoader.loadAssets();
-  res.render("assets.html", {room:room, user:user, assets:assets});
+  res.render("assets.html", {room:room, user:user, assets:assets, isDM:isDM});
 });
 
 router.post('/:room/asset', async function (req, res) {
@@ -67,8 +64,9 @@ router.post('/:room/asset', async function (req, res) {
   });
   var room = req.params.room;
   var user = req.cookies["user"];
+  var isDM = user=='DM';
   var assets = await AssetLoader.loadAssets();
-  res.render("assets.html", {room:room, user:user, assets:assets});
+  res.render("assets.html", {room:room, user:user, assets:assets, isDM:isDM});
 });
 
 module.exports = router;

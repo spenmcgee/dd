@@ -28,6 +28,8 @@ function navigation() {
   })
   nav.on(":room/asset", params => {
   })
+  nav.on(":room/config", params => {
+  })
   .on(":room", params => {
     console.log("route :room", params);
     boardStart(params.room);

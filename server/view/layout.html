@@ -18,7 +18,8 @@
     text-decoration: none;
   }
   .abs {
-    margin-top: 40px;
+    margin-top: 10px;
+    padding: 30px;
   }
   #chat-column {
     position: absolute;
@@ -52,10 +53,14 @@
 <body>
 
 <div id="menu">
-  <a href="/">start</a> /
-  <a href="/{{room}}">board</a> /
-  <a href="/{{room}}/commands">commands</a> /
-  {{user}}@{{room}}
+  <span style="padding: 5px; background-color:yellow; margin-right:10px;">{{user}}@{{room}}</span>
+  <a href="/">Start</a> /
+  <a href="/{{room}}">Board</a> /
+  <a href="/{{room}}/commands">Commands</a> /
+  {% if isDM %}
+    <a href="/{{room}}/config">Config</a> /
+    <a href="/{{room}}/asset">Assets</a> /
+  {% endif %}
   {% block menu %}
   {% endblock %}
 </div>

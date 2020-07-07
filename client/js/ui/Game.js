@@ -18,7 +18,7 @@ class Game {
     this.color = color;
     this.players = {};
     this.board = new Board(this.user, this.room, "#board");
-    this.iAmDM = user=='DM';
+    this.isDM = user=='DM';
     this.wsClient = wsClient;
   }
 
@@ -48,14 +48,6 @@ class Game {
       messages.sendToServer(new Join(this.color));
       messages.sendToServer(new Text("joining room"));
     })
-
-    // this.wsClient.addMessageHandler({
-    //   match: data => data.meta == 'join',
-    //   handler: data => {
-    //     this.players[data.user] = data;//Object.assign({})
-    //     console.log("players", this.players)
-    //   }
-    // })
 
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'text',
@@ -97,11 +89,6 @@ class Game {
       }
     })
   }
-
-  // drawPlayers(data) {
-  //   var players = Object.keys(this.players).map(id => this.players[id]);
-  //   players.forEach(player => this.board.drawPlayer(player));
-  // }
 
 }
 
