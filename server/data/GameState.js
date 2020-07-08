@@ -26,15 +26,6 @@ class GameState {
     this.players.forEach(player => {
       if (player.id == id) {
         player.localMatrix = data.localMatrix;
-        // if (direction[0]) {
-        //   player.piece.y -= 5;
-        // } else if (direction[1]) {
-        //   player.piece.x += 5;
-        // } else if (direction[2]) {
-        //   player.piece.y += 5;
-        // } else if (direction[3]) {
-        //   player.piece.x -= 5;
-        // }
       }
     });
   }

@@ -1,3 +1,9 @@
+var onDragEndCallback = null;
+
+function onDragEnd(cb) {
+  onDragEndCallback = cb;
+}
+
 function setup() {
   eve.on("snap.drag.start", function(x, y, e) {
     e.stopPropagation();
@@ -16,9 +22,15 @@ function setup() {
         transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx / zoomPan.a, dy / zoomPan.a]
       });
     }
-    var dragEnd = function() {
+    var dragEnd = function(e) {
+      if (onDragEndCallback) {
+        onDragEndCallback(this, this.transform(), e);
+      }
     }
   });
 }
 
-export default setup;
+export default {
+  setup: setup,
+  onDragEnd: onDragEnd
+}

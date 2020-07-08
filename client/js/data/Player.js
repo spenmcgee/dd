@@ -1,8 +1,9 @@
 class Player {
 
-  constructor(paper, id, room, color, localMatrix) {
+  constructor(paper, id, user, room, color, localMatrix) {
     this.paper = paper;
     this.id = id;
+    this.user = user;
     this.room = room;
     this.color = color;
     this.x = 100;

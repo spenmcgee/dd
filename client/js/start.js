@@ -2,11 +2,8 @@ import { Cookie } from '/client/js/Cookie.js';
 import { Game } from '/client/js/ui/Game.js';
 import { WebsocketClient } from '/client/js/WebsocketClient.js';
 import Navigo from '/lib/navigo/lib/navigo.es.js';
-import snapPluginSetup from '/client/js/ui/snap.plugin.js';
 
 async function boardStart(room) {
-
-  snapPluginSetup();
 
   var id = Cookie.getCookie("id");
   var user = Cookie.getCookie("user");

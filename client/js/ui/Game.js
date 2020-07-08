@@ -6,6 +6,7 @@ import { Text } from '/client/js/data/Text.js';
 import { Join } from '/client/js/data/Join.js';
 import { Move } from '/client/js/data/Move.js';
 import { Player } from '/client/js/data/Player.js';
+import snapPlugin from '/client/js/ui/snap.plugin.js';
 
 class Game {
 
@@ -38,7 +39,7 @@ class Game {
       var d = new Move(localMatrix);
       messages.sendToServer(d);
     })
-    this.addPlayer(new Player(this.board.paper, this.id, this.room, this.color));
+    this.addPlayer(new Player(this.board.paper, this.id, this.user, this.room, this.color));
     this.wsClient.onOpen(e => {
       messages.sendToServer(new Join(this.color));
       messages.sendToServer(new Text("joining room"));
@@ -55,6 +56,17 @@ class Game {
   async setup() {
 
     var messages = new Messages(this.wsClient);
+
+    snapPlugin.setup();
+    snapPlugin.onDragEnd((el,t) => { //DM override
+      var localMatrix = el.transform().localMatrix
+      var m = new Move(localMatrix);
+      m.id = el.id;
+      m.user = el.user;
+      m.room = el.room;
+      messages.sendToServer(m);
+      messages.sendToServer(new Text(`overriding position of ${m.user}`));
+    })
 
     var mainEl = document.getElementById("main");
     await this.board.drawBoard(mainEl);
@@ -88,7 +100,7 @@ class Game {
   mergeGameState(data) {
     data.players.forEach(p => {
       if (!(p.id in this.players)) {
-        this.addPlayer(new Player(this.board.paper, p.id, p.room, p.color, p.localMatrix));
+        this.addPlayer(new Player(this.board.paper, p.id, p.user, p.room, p.color, p.localMatrix));
       } else {
         this.players[p.id].color = p.color;
         this.players[p.id].localMatrix = p.localMatrix;

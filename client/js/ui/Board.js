@@ -1,10 +1,12 @@
 import { Player } from '/client/js/data/Player.js';
-//import Snap
+const PIECE_SIZE = 5;
 
 class Board {
   constructor(user, room, svgSelector) {
     this.config = null;
+    this.user = user;
     this.room = room;
+    this.isDM = user=='DM';
     this.svgSelector = svgSelector;
     this.paper = Snap(this.svgSelector);
     this.playerSvgTable = {};
@@ -30,7 +32,7 @@ class Board {
   }
 
   movePlayer(p, direction) {
-    var x = direction[2]*-5||direction[3]*5, y = direction[0]*-5||direction[1]*5;
+    var x = direction[2]*-PIECE_SIZE||direction[3]*PIECE_SIZE, y = direction[0]*-PIECE_SIZE||direction[1]*PIECE_SIZE;
     var piece = this.playerSvgTable[p.id];
     var m = piece.transform().localMatrix;
     console.log("here moving, localMatrix is ", m);
@@ -39,13 +41,18 @@ class Board {
     return m;
   }
 
-  async drawPlayer(p) {
-    var text = this.paper.text(p.x-20, p.y-10, p.user);
+  drawPlayer(p) {
+    //var text = this.paper.text(p.x+PIECE_SIZE*2, p.y+PIECE_SIZE/2, p.user);
     var circ = this.paper.circle(p.x, p.y, 10);
-    console.log("here we draw player", p);
     circ.attr('fill', p.color);
-    var group = this.paper.group(circ, text);
-    group.altDrag();
+    //var group = this.paper.group(circ, text);
+    var group = this.paper.group(circ);
+    group.id = p.id;
+    group.user = p.user;
+    group.room = p.room;
+    if (this.isDM) {
+      group.altDrag();
+    }
     p.snapSvgGroup = group;
     this.playerSvgTable[p.id] = group;
     this.paper.zpd('save', (err, data) => {
@@ -62,7 +69,6 @@ class Board {
 
   async drawBoard(el) {
     this.config = await this.getConfig(this.room);
-    //this.paper.text(650, 100, 'drag me');
     var svgData = await this.loadSvg(this.config.boardSvg);
     this.paper.append(svgData.node);
     this.paper.zpd({drag:false});
