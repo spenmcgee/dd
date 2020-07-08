@@ -39,23 +39,25 @@ class Board {
     return m;
   }
 
-  drawPlayer(p) {
+  async drawPlayer(p) {
     var text = this.paper.text(p.x-20, p.y-10, p.user);
     var circ = this.paper.circle(p.x, p.y, 10);
     console.log("here we draw player", p);
     circ.attr('fill', p.color);
     var group = this.paper.group(circ, text);
     group.altDrag();
-    this.paper.zpd('destroy');
-    this.paper.zpd();
     p.snapSvgGroup = group;
     this.playerSvgTable[p.id] = group;
-    if (p.localMatrix) {
-      this.transformPlayer(p, p.localMatrix);
-    } else {
-      p.localMatrix = group.transform().localMatrix;
-    }
-    return group;
+    this.paper.zpd('save', (err, data) => {
+      this.paper.zpd('destroy');
+      this.paper.zpd({load:data});
+      if (p.localMatrix) {
+        this.transformPlayer(p, p.localMatrix);
+      } else {
+        p.localMatrix = group.transform().localMatrix;
+      }
+      return group;
+    })
   }
 
   async drawBoard(el) {

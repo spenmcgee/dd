@@ -19,7 +19,6 @@ class AssetLoader {
           var assets = [];
           files.forEach(function (filename) {
             if (filename == '.DS_Store') return;
-            console.log("check", filename.substr(0, room.length))
             if (filename.substr(0, room.length) == room)
               assets.push(filename);
           });
