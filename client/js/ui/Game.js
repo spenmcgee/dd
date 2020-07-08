@@ -1,11 +1,13 @@
 import { Board } from '/client/js/ui/Board.js';
 import { Chat } from '/client/js/ui/Chat.js';
 import { MoveControls } from '/client/js/ui/MoveControls.js';
+import { DMControls } from '/client/js/ui/DMControls.js';
 import { Messages } from '/client/js/biz/Messages.js';
 import { Text } from '/client/js/data/Text.js';
 import { Join } from '/client/js/data/Join.js';
 import { Move } from '/client/js/data/Move.js';
 import { Player } from '/client/js/data/Player.js';
+import { Asset } from '/client/js/data/Asset.js';
 import snapPlugin from '/client/js/ui/snap.plugin.js';
 
 class Game {
@@ -20,6 +22,7 @@ class Game {
     this.board = new Board(this.user, this.room, "#board");
     this.isDM = user=='DM';
     this.wsClient = wsClient;
+    this.assetCounter = 1;
   }
 
   addPlayer(player) {
@@ -47,6 +50,14 @@ class Game {
   }
 
   async setupDM(messages) {
+    var menuEl = document.getElementById("menu");
+    var dmControls = new DMControls();
+    menuEl.append(dmControls.el);
+    dmControls.onAddAsset(url => {
+      var assetId = `asset${this.assetCounter++}`;
+      var m = this.board.drawAsset(assetId, url);
+      messages.sendToServer(new Asset(this.board.paper, assetId, this.room, url, m));
+    })
     this.wsClient.onOpen(e => {
       messages.sendToServer(new Join(this.color));
       messages.sendToServer(new Text("joining room"));
@@ -61,6 +72,7 @@ class Game {
     snapPlugin.onDragEnd((el,t) => { //DM override
       var localMatrix = el.transform().localMatrix
       var m = new Move(localMatrix);
+      m.ddtype = el.ddtype;
       m.id = el.id;
       m.user = el.user;
       m.room = el.room;

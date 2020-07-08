@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
 const MsgServer = require('./server/biz/MsgServer');
 const MsgRollEventHandler = require('./server/biz/MsgRollEventHandler');
+const MsgSexEventHandler = require('./server/biz/MsgSexEventHandler');
 const GamesManager = require('./server/biz/GamesManager');
 
 var app = express();
@@ -41,14 +42,26 @@ msgServer.addHandler({
   }
 })
 msgServer.addHandler({
+  match: data => data.meta == 'asset',
+  handler: (data, wss, client) => {
+    var gs = gm.getGameState(data.room);
+    gs.addAsset(data);
+    return [gs];
+  }
+})
+msgServer.addHandler({
+  match: data => data.meta == 'text',
+  handler: (data, wss, ws) => {
+    return [Object.assign({}, data)];
+  }
+})
+msgServer.addHandler({
   match: data => data.meta == 'text',
   handler: new MsgRollEventHandler()
 })
 msgServer.addHandler({
   match: data => data.meta == 'text',
-  handler: (data, wss, ws) => {
-    return [data];
-  }
+  handler: new MsgSexEventHandler()
 })
 msgServer.addHandler({
   match: data => data.meta == 'move',

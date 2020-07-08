@@ -10,8 +10,7 @@ class MsgRollEventHandler {
     var cmd = this.parse(messageText);
     if (cmd) {
       var results = this.execute(cmd);
-      var resultData = Object.assign(data, results);
-      return resultData;
+      return Object.assign({}, data, results);
     }
     return null;
   }

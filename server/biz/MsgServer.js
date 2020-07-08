@@ -52,6 +52,7 @@ class MsgServer {
     var data = JSON.parse(json);
     var outboundDataArray = this.messageHandlers.map(h => {
       if (h.match(data)) {
+        var r;
         if (typeof(h.handler) == 'object')
           return h.handler.handle(data, wss, ws);
         else

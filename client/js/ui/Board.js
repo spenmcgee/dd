@@ -41,12 +41,33 @@ class Board {
     return m;
   }
 
+  async drawAsset(id, url) {
+    var svgData = await this.loadSvg(url);
+    var el = this.paper.svg(100, 100, 30, 30)
+    el.append(svgData.node);
+    var group = this.paper.group(el);
+    group.ddtype = 'asset';
+    group.id = `asset${this.assetCounter++}`;
+    var bb = group.getBBox();
+    var max = bb.w > bb.h ? bb.w : bb.h;
+    var scale = 30/max;
+    group.transform(`s${scale}`);
+    this.paper.append(group);
+    group.altDrag();
+    this.paper.zpd('save', (err, data) => {
+      this.paper.zpd('destroy');
+      this.paper.zpd({load:data});
+    })
+    return group.transform().localMatrix;
+  }
+
   drawPlayer(p) {
     //var text = this.paper.text(p.x+PIECE_SIZE*2, p.y+PIECE_SIZE/2, p.user);
     var circ = this.paper.circle(p.x, p.y, 10);
     circ.attr('fill', p.color);
     //var group = this.paper.group(circ, text);
     var group = this.paper.group(circ);
+    group.ddtype = 'player';
     group.id = p.id;
     group.user = p.user;
     group.room = p.room;

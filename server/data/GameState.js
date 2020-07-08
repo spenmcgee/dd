@@ -4,6 +4,7 @@ class GameState {
     this.meta = 'game-state';
     this.room = room;
     this.players = [];
+    this.assets = [];
     this.dm = null;
   }
 
@@ -14,6 +15,10 @@ class GameState {
   addPlayer(player) {
     if (!this.hasPlayer(player.id))
       this.players.push(player);
+  }
+
+  addAsset(asset) {
+    this.assets.push(asset);
   }
 
   addDM(data) {
@@ -30,26 +35,30 @@ class GameState {
     });
   }
 
-  toJson() {
-    var data = {
-      meta: 'game-state',
-      room: this.room,
-      players: this.players.map(p => {
-        return {
-          id: p.id,
-          user: p.user,
-          room: p.room,
-          piece: {
-            color: p.piece.color,
-            x: p.piece.x,
-            y: p.piece.y,
-            localMatrix: p.piece.localMatrix
-          }
-        }
-      })
-    }
-    return data;
-  }
+  // toJson() {
+  //   var data = {
+  //     meta: 'game-state',
+  //     room: this.room,
+  //     assets: this.players.map(p => {
+  //       return {
+  //         id: p.id,
+  //         room: p.room,
+  //         url: p.url,
+  //         localMatrix: p.localMatrix
+  //       }
+  //     }),
+  //     players: this.players.map(p => {
+  //       return {
+  //         id: p.id,
+  //         user: p.user,
+  //         room: p.room,
+  //         color: p.color,
+  //         localMatrix: p.localMatrix
+  //       }
+  //     })
+  //   }
+  //   return data;
+  // }
 
 }
 

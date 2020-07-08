@@ -44,6 +44,9 @@
   #menu button {
     margin-right: 3px;
   }
+  .dm-controls input {
+    margin-right: 4px;
+  }
 </style>
 <script type="text/javascript" src="/lib/snapsvg/dist/snap.svg.js"></script>
 <script type="text/javascript" src="/lib/snap.svg.zpd/snap.svg.zpd.js"></script>
@@ -62,6 +65,7 @@
     {{user}}@{{room}}
   </span>
   <a href="/">Start</a> /
+  <a href="/{{room}}">Board</a> /
   <a href="/{{room}}/commands">Commands</a> /
   {% if isDM %}
     <a href="/{{room}}/config">Config</a> /
