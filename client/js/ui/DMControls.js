@@ -6,8 +6,6 @@ class DMControls {
 
     addAssetButton.append("Add");
 
-assetUrlInput.value = '/asset/fartlips-mime.svg';
-
     this.el = document.createElement('span');
     this.el.className = "dm-controls";
     this.el.append(assetUrlInput);
