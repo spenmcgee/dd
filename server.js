@@ -63,7 +63,6 @@ msgServer.addHandler({
   match: data => data.meta == 'move',
   handler: (data, wss, ws) => {
     var gs = gm.getGameState(data.room);
-    //gs.applyMoveToElement(data.id, data);
     gs.elements.forEach(el => { //apply move to element
       if (el.id == data.id) {
         el.localMatrix = data.localMatrix;

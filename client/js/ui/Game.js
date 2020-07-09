@@ -69,10 +69,11 @@ class Game {
       var m = new Move(localMatrix);
       m.elementType = el.elementType;
       m.id = el.id;
-      m.user = el.user;
-      m.room = el.room;
+      //m.user = el.user;
+      //m.room = el.room;
       messages.sendToServer(m);
-      messages.sendToServer(new Text(`overriding position of ${m.user}`));
+      if (el.elementType == 'player')
+        messages.sendToServer(new Text(`overriding position of ${m.user}`));
     })
 
     var mainEl = document.getElementById("main");

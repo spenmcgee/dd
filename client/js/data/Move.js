@@ -8,6 +8,17 @@ class Move extends Message {
     this.localMatrix = localMatrix;
   }
 
+  toString() {
+    var data = {
+      meta: 'move',
+      id: this.id,
+      user: this.user,
+      room: this.room,
+      localMatrix: this.localMatrix
+    }
+    return JSON.stringify(data);
+  }
+
 }
 
 export { Move }

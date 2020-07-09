@@ -22,11 +22,11 @@ class Board {
     })
   }
 
-  transformElement(p, localMatrix) {
+  transformElement(e, localMatrix) {
     if (localMatrix) {
       var m = Snap.matrix(localMatrix.a, localMatrix.b, localMatrix.c, localMatrix.d, localMatrix.e, localMatrix.f);
-      var el = this.id2ElementTable[p.id];
-      el.transform(m);
+      var element = this.id2ElementTable[e.id];
+      element.transform(m);
     }
   }
 
@@ -49,10 +49,11 @@ class Board {
   async drawAsset(asset) {
     var id = asset.id;
     var url = asset.url;
-    var svgData = await this.loadSvg(url);
     var el = this.paper.svg(100, 100, 30, 30)
-    el.append(svgData.node);
     var group = this.paper.group(el);
+    this.id2ElementTable[id] = group; //do this BEFORE the "await loadSvg" to avoid race against new incoming game-state
+    var svgData = await this.loadSvg(url);
+    el.append(svgData.node);
     group.elementType = 'asset';
     group.id = id;
     var bb = group.getBBox();
@@ -60,12 +61,12 @@ class Board {
     var scale = 30/max;
     group.transform(`s${scale}`);
     this.paper.append(group);
-    group.altDrag();
+    if (this.isDM)
+      group.altDrag();
     this.paper.zpd('save', (err, data) => {
       this.paper.zpd('destroy');
       this.paper.zpd({load:data});
     })
-    this.id2ElementTable[id] = group;
     return group.transform().localMatrix;
   }
 
@@ -92,8 +93,8 @@ class Board {
       } else {
         p.localMatrix = group.transform().localMatrix;
       }
-      return group;
     })
+    return group.transform().localMatrix;
   }
 
   async drawBoard(el) {
