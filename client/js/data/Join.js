@@ -2,10 +2,10 @@ import { Message } from './Message.js';
 
 class Join extends Message {
 
-  constructor(color) {
+  constructor() {
     super();
     this.meta = 'join';
-    this.color = color;
+    //this.color = color;
   }
 
   toString() {
@@ -14,7 +14,7 @@ class Join extends Message {
       id: this.id,
       room: this.room,
       user: this.user,
-      color: this.color
+      //color: this.color
     }
     return JSON.stringify(data);
   }

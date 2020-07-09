@@ -32,20 +32,16 @@ var msgServer = new MsgServer(3001);
 msgServer.addHandler({
   match: data => data.meta == 'join',
   handler: (data, wss, client) => {
-    var gs = gm.getGameState(data.room);
-    if (data.user == 'DM')
-      gs.addDM(data);
-    else
-      gs.addPlayer(data);
     msgServer.setClient(data, client);
+    var gs = gm.getGameState(data.room);
     return [gs];
   }
 })
 msgServer.addHandler({
-  match: data => data.meta == 'asset',
-  handler: (data, wss, client) => {
+  match: data => data.meta == 'element',
+  handler: data => {
     var gs = gm.getGameState(data.room);
-    gs.addAsset(data);
+    gs.addElement(data);
     return [gs];
   }
 })
@@ -67,7 +63,12 @@ msgServer.addHandler({
   match: data => data.meta == 'move',
   handler: (data, wss, ws) => {
     var gs = gm.getGameState(data.room);
-    gs.applyMove(data);
+    //gs.applyMoveToElement(data.id, data);
+    gs.elements.forEach(el => { //apply move to element
+      if (el.id == data.id) {
+        el.localMatrix = data.localMatrix;
+      }
+    });
     return [gs];
   }
 })

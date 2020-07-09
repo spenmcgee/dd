@@ -1,6 +1,10 @@
-class Player {
+import { Element } from './Element.js';
+
+class Player extends Element {
 
   constructor(paper, id, user, room, color, localMatrix) {
+    super();
+    this.elementType = 'player';
     this.paper = paper;
     this.id = id;
     this.user = user;
@@ -14,6 +18,8 @@ class Player {
 
   toString() {
     return JSON.stringify({
+      meta: this.meta,
+      elementType: this.elementType,
       id: this.id,
       user: this.user,
       room: this.room,

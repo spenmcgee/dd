@@ -40,6 +40,7 @@ class MsgServer {
       if (outboundRoom in this.rooms) {
         this.rooms[outboundRoom].forEach(user => {
           if (user.client.readyState === WebSocket.OPEN) {
+            console.log("sending to", user.id);
             user.client.send(JSON.stringify(outboundData));
           }
         })
