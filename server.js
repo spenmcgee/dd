@@ -28,6 +28,17 @@ app.use('/lib', express.static('node_modules'));
 app.use('/asset', express.static(DATA_ROOT));
 
 var gm = new GamesManager();
+
+router.post('/:room/reset', (req, res) => {
+  var room = req.params.room;
+  var user = req.cookies["user"];
+  var isDM = user=='DM';
+  if (isDM) {
+    gm.deleteGame(room);
+  }
+  res.redirect('/');
+})
+
 var msgServer = new MsgServer(3001);
 msgServer.addHandler({
   match: data => data.meta == 'join',

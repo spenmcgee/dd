@@ -5,8 +5,15 @@
 <h1>Config</h1>
 <form method="post">
   <textarea name="boardJson" rows="20" cols="80">{{boardJson}}</textarea>
-  <br>
-  <button type="submit">Save</button>
+  <p>
+    <button type="submit" id="config-save">Save</button>
+  </p>
+</form>
+
+<h2>Reset</h2>
+
+<form method="post" action="/{{room}}/reset">
+  <button type="submit" id="reset-game">Reset Game</button>
 </form>
 
 {% endblock %}

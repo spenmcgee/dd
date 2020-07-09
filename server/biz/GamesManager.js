@@ -11,6 +11,11 @@ class GamesManager {
     return this.games[room];
   }
 
+  deleteGame(room) {
+    console.log(`(GamesManager) Deleting game ${room}`);
+    delete this.games[room];
+  }
+
 }
 
 module.exports = GamesManager;
