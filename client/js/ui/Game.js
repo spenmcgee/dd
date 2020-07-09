@@ -73,7 +73,7 @@ class Game {
       //m.room = el.room;
       messages.sendToServer(m);
       if (el.elementType == 'player')
-        messages.sendToServer(new Text(`overriding position of ${m.user}`));
+        messages.sendToServer(new Text(`overriding position of ${el.user}`));
     })
 
     var mainEl = document.getElementById("main");
