@@ -1,6 +1,7 @@
 import { Board } from '/client/js/ui/Board.js';
 import { Chat } from '/client/js/ui/Chat.js';
 import { MoveControls } from '/client/js/ui/MoveControls.js';
+import { Roster } from '/client/js/ui/Roster.js';
 import { DMControls } from '/client/js/ui/DMControls.js';
 import { Messages } from '/client/js/biz/Messages.js';
 import { Text } from '/client/js/data/Text.js';
@@ -83,6 +84,10 @@ class Game {
     var messagesEl = document.getElementById("messages");
     this.chat = new Chat(formEl, messagesEl, this.wsClient);
 
+    this.roster = new Roster();
+    var rosterEl = document.getElementById("roster");
+    rosterEl.append(this.roster.el);
+
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'text',
       handler: this.chat
@@ -94,6 +99,7 @@ class Game {
         await this.mergeGameState(data);
         var elements = Object.keys(this.elements).map(id => this.elements[id]);
         this.board.redrawElements(elements);
+        this.roster.mergeGameState(data);
       }
     })
 
