@@ -2,6 +2,7 @@ import { Board } from '/client/js/ui/Board.js';
 import { Chat } from '/client/js/ui/Chat.js';
 import { MoveControls } from '/client/js/ui/MoveControls.js';
 import { Roster } from '/client/js/ui/Roster.js';
+import { MaskControls } from '/client/js/ui/MaskControls.js';
 import { DMControls } from '/client/js/ui/DMControls.js';
 import { Messages } from '/client/js/biz/Messages.js';
 import { Text } from '/client/js/data/Text.js';
@@ -58,6 +59,9 @@ class Game {
       messages.sendToServer(new Join());
       messages.sendToServer(new Text("joining room"));
     })
+
+    var maskControls = new MaskControls();
+    menuEl.append(maskControls.el);
   }
 
   async setup() {
