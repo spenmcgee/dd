@@ -1,5 +1,7 @@
 class MaskControls {
-  constructor() {
+  constructor(board) {
+    this.board = board;
+    this.zpdData = null;
     this.el = document.createElement('span');
     this.mode = 'none';
 
@@ -13,19 +15,19 @@ class MaskControls {
 
     this.maskButton.addEventListener('click', e => {
       if (this.mode == 'mask')
-        this.setupMode('none');
+        this.setupMode('none', this.mode);
       else
-        this.setupMode('mask');
+        this.setupMode('mask', this.mode);
     })
     this.unmaskButton.addEventListener('click', e => {
       if (this.mode == 'unmask')
-        this.setupMode('none');
+        this.setupMode('none', this.mode);
       else
-        this.setupMode('unmask');
+        this.setupMode('unmask', this.mode);
     })
   }
 
-  setupMode(mode) {
+  setupMode(mode, prevMode) {
     this.mode = mode;
     this.maskButton.classList.remove('enabled');
     this.unmaskButton.classList.remove('enabled');
@@ -35,6 +37,10 @@ class MaskControls {
       this.unmaskButton.classList.add('enabled');
     }
     this.setupPointer(mode);
+    if ((prevMode == 'none') && (mode != 'none'))
+      this.board.paper.zpd('toggle');
+    if ((prevMode != 'none') && (mode == 'none'))
+      this.board.paper.zpd('toggle');
   }
 
   setupPointer(mode) {

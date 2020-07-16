@@ -60,7 +60,7 @@ class Game {
       messages.sendToServer(new Text("joining room"));
     })
 
-    var maskControls = new MaskControls();
+    var maskControls = new MaskControls(this.board);
     menuEl.append(maskControls.el);
   }
 
