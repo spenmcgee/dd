@@ -113,6 +113,25 @@ class Game {
       await this.setupPlayer(messages);
     }
 
+// var paper = this.board.paper;
+//
+// var rect1 = paper.rect(100, 100, 50, 50).attr({ fill: 'red', 'opacity': 0.3 });
+// var rect2 = paper.rect(120, 130, 60, 30).attr({ fill: 'yellow', 'opacity': 0.3 });
+// console.log("here in Game", rect1.paper.path())
+//
+// var p1 = rect1.paper.path();
+// p1.attr({stroke:"blue", fill:"purple"});
+// paper.path(p1)
+//
+// rect1.remove();
+//
+// var myPathString = "M 60 0 L 120 0 L 180 60 L 180 120 L 120 180 L 60 180 L 0 120 L 0 60 Z";
+//
+// var p2  = paper.path( myPathString );
+// p2.transform("t200,120")
+// p2.attr({ fill: 'pink', 'opacity': 0.3, stroke:"blue", strokeWidth:5 })
+
+
   }
 
   async newElement(el) {
