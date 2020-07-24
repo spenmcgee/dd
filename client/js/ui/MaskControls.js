@@ -5,6 +5,8 @@ class MaskControls {
     this.mode = 'none';
     this.dragMode = false;
     this.mask = null;
+    this.maskbg = null;
+    this.fullMask = null;
     this.rects = [];
     this.maskMode = false;
 
@@ -46,8 +48,6 @@ class MaskControls {
   editMaskMode() {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
     this.fullMask.remove();
-    //zpdGroup.add(this.fullMask);
-    //this.maskbg.attr({fill:'black', opacity:0.5});
     this.maskbg.attr({mask:this.mask, fill:'yellow', opacity:0.3});
     zpdGroup.add(this.maskbg);
   }
@@ -69,11 +69,15 @@ class MaskControls {
     zpdGroup.add(applyMask);
     this.fullMask = this.board.paper.rect(rect.getBBox()).attr({mask:applyMask});
     zpdGroup.add(this.fullMask);
-    //this.fullMask.remove();
   }
 
   getMask() {
-    return this.mask;
+    return {
+      rects: this.rects,
+      mask: this.mask,
+      maskbg: this.maskbg,
+      fullMask: this.fullMask
+    }
   }
 
   setupMode(mode, prevMode) {
