@@ -36,7 +36,14 @@ class MaskControls {
   }
 
   applyMask() {
-
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
+    var zpdCoordSpaceMatrix = Snap.matrix(this.board.paper.zpd('save'));
+    var inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
+    var bb = this.board.paper.getBBox();
+    var rect = this.board.paper.rect(bb).attr({fill:'black', opacity:0.8})
+    rect.transform(inverseCoordSpaceMatrix.toTransformString());
+    rect.attr({mask:this.mask});
+    zpdGroup.add(rect);
   }
 
   getMask() {
