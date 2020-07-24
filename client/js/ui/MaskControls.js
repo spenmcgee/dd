@@ -104,17 +104,13 @@ class MaskControls {
     var rects = [];
     var self = this;
     var tx = null, ty = null, zoom = null, tstr = null;
-    var tstr = null;
+    var inverseCoordSpaceMatrix = null;
 
     function onstart(x, y, e) {
-      var zpdData = paper.zpd('save');
-      console.log("zpdData", zpdData);
-      tx = zpdData.e, ty = zpdData.f, zoom = zpdData.a;
-      //rect = this.paper.rect((x-tx)/zoom,(y-ty)/zoom,1,1).attr({fill:'red', opacity:0.3});
+      var zpdCoordSpaceMatrix = Snap.matrix(paper.zpd('save'));
+      inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
       rect = this.paper.rect(x,y,1,1).attr({fill:'red', opacity:0.3});
-      //rect.transform(`s${1/zoom} t${x-tx},${y-ty}`);
-      tstr = `scale(${1/zoom}) translate(${-tx},${-ty})`
-      rect.transform(tstr);
+      rect.transform(inverseCoordSpaceMatrix.toTransformString());
       var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
       zpdGroup.add(rect);
     }
