@@ -103,32 +103,42 @@ class MaskControls {
     var mask = null, maskbg = null;
     var rects = [];
     var self = this;
-    var tx = null, ty = null, zoom = null;
+    var tx = null, ty = null, zoom = null, tstr = null;
+    var tstr = null;
 
     function onstart(x, y, e) {
       var zpdData = paper.zpd('save');
+      console.log("zpdData", zpdData);
       tx = zpdData.e, ty = zpdData.f, zoom = zpdData.a;
-      rect = this.paper.rect((x-tx)/zoom,(y-ty)/zoom,1,1).attr({fill:'red', opacity:0.3});
+      //rect = this.paper.rect((x-tx)/zoom,(y-ty)/zoom,1,1).attr({fill:'red', opacity:0.3});
+      rect = this.paper.rect(x,y,1,1).attr({fill:'red', opacity:0.3});
+      //rect.transform(`s${1/zoom} t${x-tx},${y-ty}`);
+      tstr = `scale(${1/zoom}) translate(${-tx},${-ty})`
+      rect.transform(tstr);
       var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
       zpdGroup.add(rect);
     }
     function onmove(dx, dy, x, y, e) {
-      var attr = {width:Math.abs(dx)/zoom, height:Math.abs(dy)/zoom};
-      if (dx < 0) attr.x = (x-tx)/zoom;
-      if (dy < 0) attr.y = (y-ty)/zoom;
+      // var attr = {width:Math.abs(dx)/zoom, height:Math.abs(dy)/zoom};
+      // if (dx < 0) attr.x = (x-tx)/zoom;
+      // if (dy < 0) attr.y = (y-ty)/zoom;
+      // rect.attr(attr);
+      var attr = {width:Math.abs(dx), height:Math.abs(dy)};
+      if (dx < 0) attr.x = x;
+      if (dy < 0) attr.y = y;
       rect.attr(attr);
     }
     function onend(e) {
-      //rect.attr({fill:'white', opacity:1});
+      rect.attr({fill:'white', opacity:1});
       rects.push(rect);
-      // rect.remove();
-      // mask = paper.g(...rects);
-      // var bb = mask.getBBox();
-      // if (maskbg) maskbg.remove();
-      // maskbg = paper.rect(bb).attr({fill:'yellow', mask:mask, opacity:0.5})
-      // self.mask = mask;
-      // self.maskbg = maskbg;
-      self.mask = rect;
+      rect.remove();
+      mask = paper.g(...rects);
+      var bb = mask.getBBox();
+      if (maskbg) maskbg.remove();
+      maskbg = paper.rect(bb).attr({fill:'yellow', mask:mask, opacity:0.5})
+      self.mask = mask;
+      self.maskbg = maskbg;
+      //self.mask = rect;
     }
     paper.drag(onmove, onstart, onend);
   }
