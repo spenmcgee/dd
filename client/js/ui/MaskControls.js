@@ -39,6 +39,10 @@ class MaskControls {
 
   }
 
+  getMask() {
+    return this.mask;
+  }
+
   setupMode(mode, prevMode) {
     this.mode = mode;
     this.maskButton.classList.remove('enabled');
@@ -79,12 +83,11 @@ class MaskControls {
   }
 
   setupDrag(dragMode) {
-    var paper = this.board.paper;
     var rect = null;
-    var mask = null;
     var self = this;
+    var paper = this.board.paper;
     var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
-
+    paper.drag(onmove, onstart, onend);
     function onstart(x, y, e) {
       var zpdCoordSpaceMatrix = Snap.matrix(paper.zpd('save'));
       var inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
@@ -99,15 +102,21 @@ class MaskControls {
       rect.attr(attr);
     }
     function onend(e) {
-      rect.attr({fill:'yellow', opacity:1});
+      if (self.mode == 'mask')
+        rect.attr({fill:'white', opacity:1});
+      else if (self.mode == 'unmask')  {
+        rect.attr({fill:'black', opacity:1});
+      }
       self.rects.push(rect);
       rect.remove();
       if (self.mask) self.mask.remove();
       self.mask = paper.g(...self.rects);
-      self.mask.attr({opacity:0.3})
-      zpdGroup.add(self.mask);
+      var bb = self.mask.getBBox();
+      //self.mask.attr({fill:'blue', opacity:1})
+      self.maskbg = paper.rect(bb).attr({mask:self.mask, fill:'yellow', opacity:0.3});
+      //zpdGroup.add(self.mask);
+      zpdGroup.add(self.maskbg);
     }
-    paper.drag(onmove, onstart, onend);
   }
 
 }
