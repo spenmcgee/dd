@@ -100,29 +100,22 @@ class MaskControls {
   setupDrag(dragMode) {
     var paper = this.board.paper;
     var rect = null;
-    var path = null;
-    var pathStr = null;
-    var maskPath = null;
     var mask = null, maskbg = null;
     var rects = [];
     var self = this;
-
-    var startx = null, starty = null;
+    var tx = null, ty = null, zoom = null;
 
     function onstart(x, y, e) {
       var zpdData = paper.zpd('save');
-      console.log("zpdData", zpdData);
-      rect = this.paper.rect((x-zpdData.e)/zpdData.a,(y-zpdData.f)/zpdData.a,10,10).attr({fill:'red', opacity:0.3});
-
+      tx = zpdData.e, ty = zpdData.f, zoom = zpdData.a;
+      rect = this.paper.rect((x-tx)/zoom,(y-ty)/zoom,1,1).attr({fill:'red', opacity:0.3});
       var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
-      console.log("here is zpdGroup", zpdGroup.transform())
       zpdGroup.add(rect);
-      startx = x, starty = y;
     }
     function onmove(dx, dy, x, y, e) {
-      var attr = {width:Math.abs(dx), height:Math.abs(dy)};
-      if (dx < 0) attr.x = x;
-      if (dy < 0) attr.y = y;
+      var attr = {width:Math.abs(dx)/zoom, height:Math.abs(dy)/zoom};
+      if (dx < 0) attr.x = (x-tx)/zoom;
+      if (dy < 0) attr.y = (y-ty)/zoom;
       rect.attr(attr);
     }
     function onend(e) {
