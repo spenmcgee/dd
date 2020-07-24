@@ -112,9 +112,7 @@ class MaskControls {
       if (self.mask) self.mask.remove();
       self.mask = paper.g(...self.rects);
       var bb = self.mask.getBBox();
-      //self.mask.attr({fill:'blue', opacity:1})
       self.maskbg = paper.rect(bb).attr({mask:self.mask, fill:'yellow', opacity:0.3});
-      //zpdGroup.add(self.mask);
       zpdGroup.add(self.maskbg);
     }
   }
