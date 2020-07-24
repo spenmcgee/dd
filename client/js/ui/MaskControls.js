@@ -6,6 +6,7 @@ class MaskControls {
     this.dragMode = false;
     this.mask = null;
     this.rects = [];
+    this.maskMode = false;
 
     this.maskButton = document.createElement('button');
     this.maskButton.append("mask");
@@ -31,12 +32,32 @@ class MaskControls {
         this.setupMode('unmask', this.mode);
     })
     this.applyButton.addEventListener('click', e => {
-      this.applyMask();
+      this.maskMode = !this.maskMode;
+      if (this.maskMode) {
+        this.viewMaskMode();
+        this.applyButton.classList.add('enabled');
+      } else {
+        this.editMaskMode();
+        this.applyButton.classList.remove('enabled');
+      }
     })
   }
 
-  applyMask() {
-    this.maskbg.remove();
+  editMaskMode() {
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
+    this.fullMask.remove();
+    //zpdGroup.add(this.fullMask);
+    //this.maskbg.attr({fill:'black', opacity:0.5});
+    this.maskbg.attr({mask:this.mask, fill:'yellow', opacity:0.3});
+    zpdGroup.add(this.maskbg);
+  }
+
+  viewMaskMode() {
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
+    this.buildFullMask();
+  }
+
+  buildFullMask() {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
     var zpdCoordSpaceMatrix = Snap.matrix(this.board.paper.zpd('save'));
     var inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
@@ -46,8 +67,9 @@ class MaskControls {
     var applyMask = this.board.paper.g(rect, this.maskbg);
     this.maskbg.attr({fill:'black', opacity:1});
     zpdGroup.add(applyMask);
-    var finalMask = this.board.paper.rect(rect.getBBox()).attr({mask:applyMask});
-    zpdGroup.add(finalMask);
+    this.fullMask = this.board.paper.rect(rect.getBBox()).attr({mask:applyMask});
+    zpdGroup.add(this.fullMask);
+    //this.fullMask.remove();
   }
 
   getMask() {
