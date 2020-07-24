@@ -1,11 +1,11 @@
 class MaskControls {
   constructor(board) {
     this.board = board;
-    this.zpdData = null;
     this.el = document.createElement('span');
     this.mode = 'none';
     this.dragMode = false;
     this.mask = null;
+    this.rects = [];
 
     this.maskButton = document.createElement('button');
     this.maskButton.append("mask");
@@ -64,17 +64,10 @@ class MaskControls {
   boardMoving() {
     this.board.paper.undrag();
     this.board.paper.zpd('toggle');
-    // var zoomPan = this.board.paper.zpd('save');
-    // console.log("zoomPan", zoomPan)
-    // console.log("before mask transform", this.mask.transform())
-    // this.board.paper.zpd('destroy');
-    // this.board.paper.zpd({load:zoomPan});
   }
 
   boardStill() {
     this.board.paper.zpd('toggle');
-    var zpd = this.board.paper.zpd('save');
-    console.log("start", zpd);
   }
 
   setupPointer(mode) {
@@ -88,19 +81,15 @@ class MaskControls {
   setupDrag(dragMode) {
     var paper = this.board.paper;
     var rect = null;
-    var mask = null, maskbg = null;
-    var rects = [];
+    var mask = null;
     var self = this;
-    var tx = null, ty = null, zoom = null, tstr = null;
-    var inverseCoordSpaceMatrix = null;
     var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
 
     function onstart(x, y, e) {
       var zpdCoordSpaceMatrix = Snap.matrix(paper.zpd('save'));
-      inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
-      rect = this.paper.rect(x,y,1,1).attr({fill:'red', opacity:0.3});
+      var inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
+      rect = paper.rect(x,y,1,1).attr({fill:'red', opacity:0.3});
       rect.transform(inverseCoordSpaceMatrix.toTransformString());
-      //var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
       zpdGroup.add(rect);
     }
     function onmove(dx, dy, x, y, e) {
@@ -111,11 +100,12 @@ class MaskControls {
     }
     function onend(e) {
       rect.attr({fill:'yellow', opacity:1});
-      rects.push(rect);
+      self.rects.push(rect);
       rect.remove();
-      mask = paper.g(...rects);
-      mask.attr({opacity:0.4})
-      zpdGroup.add(mask);
+      if (self.mask) self.mask.remove();
+      self.mask = paper.g(...self.rects);
+      self.mask.attr({opacity:0.3})
+      zpdGroup.add(self.mask);
     }
     paper.drag(onmove, onstart, onend);
   }
