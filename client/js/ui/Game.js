@@ -8,6 +8,7 @@ import { Messages } from '/client/js/biz/Messages.js';
 import { Text } from '/client/js/data/Text.js';
 import { Join } from '/client/js/data/Join.js';
 import { Move } from '/client/js/data/Move.js';
+import { Mask } from '/client/js/data/Mask.js';
 import { Player } from '/client/js/data/Player.js';
 import { Asset } from '/client/js/data/Asset.js';
 import snapPlugin from '/client/js/ui/snap.plugin.js';
@@ -62,6 +63,10 @@ class Game {
 
     var maskControls = new MaskControls(this.board);
     menuEl.append(maskControls.el);
+    maskControls.onMask(rects => {
+      console.log("rects", rects);
+      messages.sendToServer(new Mask(rects));
+    })
   }
 
   async setup() {

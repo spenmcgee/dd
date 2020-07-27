@@ -119,6 +119,10 @@ class MaskControls {
     }
   }
 
+  onMask(newMaskCallback) {
+    this.newMaskCallback = newMaskCallback;
+  }
+
   setupDrag(dragMode) {
     var rect = null;
     var self = this;
@@ -151,6 +155,7 @@ class MaskControls {
       var bb = self.mask.getBBox();
       self.maskbg = paper.rect(bb).attr({mask:self.mask, fill:'yellow', opacity:0.3});
       zpdGroup.add(self.maskbg);
+      self.newMaskCallback(self.rects);
     }
   }
 

@@ -63,6 +63,12 @@ msgServer.addHandler({
   }
 })
 msgServer.addHandler({
+  match: data => data.meta == 'mask', //simple rebroadcast
+  handler: (data, wss, ws) => {
+    return [Object.assign({}, data)];
+  }
+})
+msgServer.addHandler({
   match: data => data.meta == 'text',
   handler: new MsgRollEventHandler()
 })
