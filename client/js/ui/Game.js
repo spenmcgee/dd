@@ -60,6 +60,7 @@ class Game {
       messages.sendToServer(new Join());
       messages.sendToServer(new Text("joining room"));
     })
+    this.maskControls.onApply(() => this.board.redrawLayers());
     this.maskControls.onMask(rects => {
       this.board.redrawLayers();
       messages.sendToServer(new Mask(rects));

@@ -42,6 +42,7 @@ class MaskControls {
         this.editMaskMode();
         this.applyButton.classList.remove('enabled');
       }
+      this.applyMaskCallback(this.rects);
     })
   }
 
@@ -121,6 +122,9 @@ class MaskControls {
 
   onMask(newMaskCallback) {
     this.newMaskCallback = newMaskCallback;
+  }
+  onApply(applyMaskCallback) {
+    this.applyMaskCallback = applyMaskCallback;
   }
 
   setRects(rects) {
