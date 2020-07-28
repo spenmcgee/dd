@@ -45,7 +45,7 @@ msgServer.addHandler({
   handler: (data, wss, client) => {
     msgServer.setClient(data, client);
     var gs = gm.getGameState(data.room);
-    return [gs];
+    return [gs, {room:gs.room, user:data.user, meta:'mask', rects:gs.maskRects}];
   }
 })
 msgServer.addHandler({
@@ -65,6 +65,8 @@ msgServer.addHandler({
 msgServer.addHandler({
   match: data => data.meta == 'mask', //simple rebroadcast
   handler: (data, wss, ws) => {
+    var gs = gm.getGameState(data.room);
+    gs.setMask(data.rects);
     return [Object.assign({}, data)];
   }
 })

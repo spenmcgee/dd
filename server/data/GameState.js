@@ -4,6 +4,15 @@ class GameState {
     this.meta = 'game-state';
     this.room = room;
     this.elements = [];
+    this.maskRects = null;
+  }
+
+  setMask(maskRects) {
+    this.maskRects = maskRects;
+  }
+
+  getMask() {
+    return this.maskRects;
   }
 
   hasElement(id) {

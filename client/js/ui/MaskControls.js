@@ -34,6 +34,7 @@ class MaskControls {
         this.setupMode('unmask', this.mode);
     })
     this.applyButton.addEventListener('click', e => {
+      if (this.rects.length == 0) return;
       this.maskMode = !this.maskMode;
       if (this.maskMode) {
         this.viewMaskMode();
@@ -127,7 +128,8 @@ class MaskControls {
     this.applyMaskCallback = applyMaskCallback;
   }
 
-  setRects(rects) {
+  setRects(rects, isFull) {
+    if ((!rects) || (rects.length == 0)) return;
     this.rects.forEach(r => r.remove());
     if (this.mask) this.mask.remove();
     if (this.maskbg) this.maskbg.remove();
@@ -145,7 +147,8 @@ class MaskControls {
     var bb = this.mask.getBBox();
     this.maskbg = paper.rect(bb).attr({mask:this.mask, fill:'yellow', opacity:0.3});
     zpdGroup.add(this.maskbg);
-    this.buildFullMask();
+    if (isFull)
+      this.buildFullMask();
   }
 
   setupDrag(dragMode) {

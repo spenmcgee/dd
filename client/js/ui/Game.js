@@ -116,8 +116,11 @@ class Game {
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'mask',
       handler: data => {
-        if (!this.isDM) {
-          this.maskControls.setRects(data.rects);
+        if ((this.isDM) && (data.user == 'DM')) { //rebroadcast from a DM join event
+          this.maskControls.setRects(data.rects, false);
+          this.board.redrawLayers();
+        } else if (!this.isDM) {
+          this.maskControls.setRects(data.rects, true);
           this.board.redrawLayers();
         }
       }
