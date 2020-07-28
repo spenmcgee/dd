@@ -123,6 +123,19 @@ class MaskControls {
     this.newMaskCallback = newMaskCallback;
   }
 
+  setRects(rects) {
+    this.rects = rects;
+    var paper = this.board.paper;
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
+    var zpdCoordSpaceMatrix = Snap.matrix(paper.zpd('save'));
+    var inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
+    this.rects.forEach(r => {
+      var rect = paper.rect(r[0],r[1],r[2],r[3]).attr({fill:'white', opacity:1});
+      //rect.transform(zpdCoordSpaceMatrix.toTransformString());
+      zpdGroup.add(rect);
+    })
+  }
+
   setupDrag(dragMode) {
     var rect = null;
     var self = this;

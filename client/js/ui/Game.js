@@ -60,13 +60,10 @@ class Game {
       messages.sendToServer(new Join());
       messages.sendToServer(new Text("joining room"));
     })
-
-    var maskControls = new MaskControls(this.board);
-    menuEl.append(maskControls.el);
-    maskControls.onMask(rects => {
-      console.log("rects", rects);
+    this.maskControls.onMask(rects => {
       messages.sendToServer(new Mask(rects));
     })
+    menuEl.append(this.maskControls.el);
   }
 
   async setup() {
@@ -97,6 +94,8 @@ class Game {
     var rosterEl = document.getElementById("roster");
     rosterEl.append(this.roster.el);
 
+    this.maskControls = new MaskControls(this.board);
+
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'text',
       handler: this.chat
@@ -109,6 +108,16 @@ class Game {
         var elements = Object.keys(this.elements).map(id => this.elements[id]);
         this.board.redrawElements(elements);
         this.roster.mergeGameState(data);
+      }
+    })
+
+    this.wsClient.addMessageHandler({
+      match: data => data.meta == 'mask',
+      handler: data => {
+        if (!this.isDM) {
+          console.log("here is mask data", data)
+          this.maskControls.setRects(data.rects);
+        }
       }
     })
 
