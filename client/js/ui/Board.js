@@ -97,6 +97,14 @@ class Board {
     return group.transform().localMatrix;
   }
 
+  redrawLayers() {
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+this.paper.id);
+    for (var id of Object.keys(this.id2ElementTable)) {
+      var el = this.id2ElementTable[id];
+      zpdGroup.add(el);
+    }
+  }
+
   async drawBoard(el) {
     this.config = await this.getConfig(this.room);
     var svgData = await this.loadSvg(this.config.boardSvg);

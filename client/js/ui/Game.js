@@ -61,6 +61,7 @@ class Game {
       messages.sendToServer(new Text("joining room"));
     })
     this.maskControls.onMask(rects => {
+      this.board.redrawLayers();
       messages.sendToServer(new Mask(rects));
     })
     menuEl.append(this.maskControls.el);
@@ -116,6 +117,7 @@ class Game {
       handler: data => {
         if (!this.isDM) {
           this.maskControls.setRects(data.rects);
+          this.board.redrawLayers();
         }
       }
     })

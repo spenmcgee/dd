@@ -125,6 +125,9 @@ class MaskControls {
 
   setRects(rects) {
     this.rects.forEach(r => r.remove());
+    if (this.mask) this.mask.remove();
+    if (this.maskbg) this.maskbg.remove();
+    if (this.fullMask) this.fullMask.remove();
     this.rects = [];
     var paper = this.board.paper;
     var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
@@ -134,6 +137,11 @@ class MaskControls {
       zpdGroup.add(rect);
       this.rects.push(rect);
     })
+    this.mask = paper.g(...this.rects);
+    var bb = this.mask.getBBox();
+    this.maskbg = paper.rect(bb).attr({mask:this.mask, fill:'yellow', opacity:0.3});
+    zpdGroup.add(this.maskbg);
+    this.buildFullMask();
   }
 
   setupDrag(dragMode) {
