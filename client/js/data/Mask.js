@@ -20,7 +20,8 @@ class Mask extends Message {
         var y = parseInt(r.attr('y')) * m.a + m.f;
         var w = parseInt(r.attr('width')) * m.a;
         var h = parseInt(r.attr('height')) * m.a;
-        return [x, y, w, h];
+        var sign = r.attr()['fill'] == '#ffffff' ? 1 : 0;
+        return [x, y, w, h, sign];
       })
     }
     return JSON.stringify(data);

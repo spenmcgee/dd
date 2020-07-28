@@ -124,15 +124,15 @@ class MaskControls {
   }
 
   setRects(rects) {
-    this.rects = rects;
+    this.rects.forEach(r => r.remove());
+    this.rects = [];
     var paper = this.board.paper;
     var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
-    var zpdCoordSpaceMatrix = Snap.matrix(paper.zpd('save'));
-    var inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
-    this.rects.forEach(r => {
-      var rect = paper.rect(r[0],r[1],r[2],r[3]).attr({fill:'white', opacity:1});
-      //rect.transform(zpdCoordSpaceMatrix.toTransformString());
+    rects.forEach(r => {
+      var color = r[4] ? 'white' : 'black';
+      var rect = paper.rect(r[0],r[1],r[2],r[3]).attr({fill:color, opacity:1});
       zpdGroup.add(rect);
+      this.rects.push(rect);
     })
   }
 

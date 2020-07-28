@@ -115,7 +115,6 @@ class Game {
       match: data => data.meta == 'mask',
       handler: data => {
         if (!this.isDM) {
-          console.log("here is mask data", data)
           this.maskControls.setRects(data.rects);
         }
       }
