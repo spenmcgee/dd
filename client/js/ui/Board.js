@@ -124,8 +124,15 @@ class Board {
     return group.transform().localMatrix;
   }
 
-  redrawLayers() {
+  redrawLayers(maskControls) {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.paper.id);
+    maskControls.drawMaskBg();
+    for (var id of Object.keys(this.id2ElementTable)) {
+      var el = this.id2ElementTable[id];
+      if (el.elementType == 'asset')
+        zpdGroup.add(el);
+    }
+    maskControls.drawFullMask();
     for (var id of Object.keys(this.id2ElementTable)) {
       var el = this.id2ElementTable[id];
       if (el.elementType == 'player')

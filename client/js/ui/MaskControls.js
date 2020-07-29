@@ -47,6 +47,18 @@ class MaskControls {
     })
   }
 
+  drawMaskBg() {
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
+    if (this.maskBg)
+      zpdGroup.add(this.maskBg);
+  }
+
+  drawFullMask() {
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
+    if (this.fullMask && (this.maskMode))
+      zpdGroup.add(this.fullMask);
+  }
+
   editMaskMode() {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
     this.fullMask.remove();

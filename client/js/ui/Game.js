@@ -61,9 +61,9 @@ class Game {
       messages.sendToServer(new Join());
       messages.sendToServer(new Text("joining room"));
     })
-    this.maskControls.onApply(() => this.board.redrawLayers());
+    this.maskControls.onApply(() => this.board.redrawLayers(this.maskControls));
     this.maskControls.onMask(rects => {
-      this.board.redrawLayers();
+      this.board.redrawLayers(this.maskControls);
       messages.sendToServer(new Mask(rects));
     })
     menuEl.append(this.maskControls.el);
@@ -123,10 +123,10 @@ class Game {
       handler: data => {
         if ((this.isDM) && (data.user == 'DM')) { //rebroadcast from a DM join event
           this.maskControls.setRects(data.rects, false);
-          this.board.redrawLayers();
+          this.board.redrawLayers(this.maskControls);
         } else if (!this.isDM) {
           this.maskControls.setRects(data.rects, true);
-          this.board.redrawLayers();
+          this.board.redrawLayers(this.maskControls);
         }
       }
     })
