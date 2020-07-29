@@ -58,7 +58,7 @@ class Board {
     group.id = id;
     var bb = group.getBBox();
     var max = bb.w > bb.h ? bb.w : bb.h;
-    var scale = 30/max;
+    var scale = 40/max;
     group.transform(`s${scale}`);
     this.paper.append(group);
     if (this.isDM)
