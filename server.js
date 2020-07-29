@@ -90,6 +90,18 @@ msgServer.addHandler({
     return [gs];
   }
 })
+msgServer.addHandler({
+  match: data => data.meta == 'kill',
+  handler: (data, wss, ws) => {
+    var gs = gm.getGameState(data.room);
+    gs.elements.forEach(el => { //apply move to element
+      if (el.id == data.id) {
+        el.killed = true;
+      }
+    });
+    return [gs];
+  }
+})
 
 console.log("(server) DATA_ROOT", DATA_ROOT);
 app.listen(3000, () => console.log(`Listening on 3000 and 3001`));

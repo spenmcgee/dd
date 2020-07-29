@@ -61,13 +61,25 @@ class Board {
     var scale = 40/max;
     group.transform(`s${scale}`);
     this.paper.append(group);
-    if (this.isDM)
+    if (this.isDM) {
       group.altDrag();
+      this.setupKillable(group);
+    }
     this.paper.zpd('save', (err, data) => {
       this.paper.zpd('destroy');
       this.paper.zpd({load:data});
     })
     return group.transform().localMatrix;
+  }
+
+  onKill(killCallback) {
+    this.killCallback = killCallback;
+  }
+
+  setupKillable(group) {
+    group.dblclick(e => {
+      this.killCallback(group.id, group, e);
+    })
   }
 
   drawPlayer(p) {

@@ -11,6 +11,7 @@ class Asset extends Element {
     this.url = url;
     this.localMatrix = localMatrix;
     this.snapSvgGroup = null;
+    this.killed = false;
   }
 
   toString() {
@@ -20,7 +21,8 @@ class Asset extends Element {
       id: this.id,
       room: this.room,
       url: this.url,
-      localMatrix: this.localMatrix
+      localMatrix: this.localMatrix,
+      killed: this.killed
     });
   }
 

@@ -15,15 +15,17 @@ function setup() {
     }
     var dragStart = function ( x,y,ev ) {
       this.data('origTransform', this.transform().local );
+      this.moved = false;
     }
     var dragMove = function(dx, dy, ev, x, y) {
+      this.moved = true;
       var zoomPan = this.paper.zpd('save');
       this.attr({
         transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx / zoomPan.a, dy / zoomPan.a]
       });
     }
     var dragEnd = function(e) {
-      if (onDragEndCallback) {
+      if (onDragEndCallback && this.moved) {
         onDragEndCallback(this, this.transform(), e);
       }
     }

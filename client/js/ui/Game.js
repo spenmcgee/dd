@@ -11,6 +11,7 @@ import { Move } from '/client/js/data/Move.js';
 import { Mask } from '/client/js/data/Mask.js';
 import { Player } from '/client/js/data/Player.js';
 import { Asset } from '/client/js/data/Asset.js';
+import { Kill } from '/client/js/data/Kill.js';
 import snapPlugin from '/client/js/ui/snap.plugin.js';
 
 class Game {
@@ -66,6 +67,10 @@ class Game {
       messages.sendToServer(new Mask(rects));
     })
     menuEl.append(this.maskControls.el);
+    this.board.onKill((id, el) => {
+      messages.sendToServer(new Kill(id));
+      messages.sendToServer(new Text(`${id} has been defeated`));
+    })
   }
 
   async setup() {
