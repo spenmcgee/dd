@@ -19,6 +19,7 @@ class AssetLoader {
           var assets = [];
           files.forEach(function (filename) {
             if (filename == '.DS_Store') return;
+            if (filename == `${room}-config.json`) return;
             if (filename.substr(0, room.length) == room)
               assets.push(filename);
           });
