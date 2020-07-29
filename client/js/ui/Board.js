@@ -101,7 +101,8 @@ class Board {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.paper.id);
     for (var id of Object.keys(this.id2ElementTable)) {
       var el = this.id2ElementTable[id];
-      zpdGroup.add(el);
+      if (el.elementType == 'player')
+        zpdGroup.add(el);
     }
   }
 
