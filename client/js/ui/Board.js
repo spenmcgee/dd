@@ -27,6 +27,12 @@ class Board {
       var m = Snap.matrix(localMatrix.a, localMatrix.b, localMatrix.c, localMatrix.d, localMatrix.e, localMatrix.f);
       var element = this.id2ElementTable[e.id];
       element.transform(m);
+      var marked = element.select("#killSymbol") ? true : false;
+      if ((!marked) && (e.killed)) {
+        var x = element.matrix.e, y = element.matrix.f;
+        var p = this.paper.path(`M 100 100 l 30 30 m -30 0 l 30 -30`).attr({id:'killSymbol', stroke:'red', strokeWidth:10, opacity:0.4});
+        element.add(p);
+      }
     }
   }
 

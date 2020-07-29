@@ -168,6 +168,7 @@ class Game {
     } else {
       this.elements[a.id].url = a.url;
       this.elements[a.id].localMatrix = a.localMatrix;
+      this.elements[a.id].killed = a.killed;
     }
   }
 
