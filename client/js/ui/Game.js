@@ -164,7 +164,7 @@ class Game {
 
   async mergeAsset(a) {
     if (!(a.id in this.elements)) {
-      await this.newElement(new Asset(this.board.paper, a.id, a.room, a.url, a.localMatrix));
+      await this.newElement(new Asset(this.board.paper, a.id, a.room, a.url, a.localMatrix, a.killed));
     } else {
       this.elements[a.id].url = a.url;
       this.elements[a.id].localMatrix = a.localMatrix;

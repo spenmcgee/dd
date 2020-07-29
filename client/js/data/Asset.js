@@ -2,7 +2,7 @@ import { Element } from './Element.js';
 
 class Asset extends Element {
 
-  constructor(paper, id, room, url, localMatrix) {
+  constructor(paper, id, room, url, localMatrix, killed) {
     super();
     this.elementType = 'asset';
     this.paper = paper;
@@ -11,7 +11,7 @@ class Asset extends Element {
     this.url = url;
     this.localMatrix = localMatrix;
     this.snapSvgGroup = null;
-    this.killed = false;
+    this.killed = killed;
   }
 
   toString() {

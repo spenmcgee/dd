@@ -29,11 +29,17 @@ class Board {
       element.transform(m);
       var marked = element.select("#killSymbol") ? true : false;
       if ((!marked) && (e.killed)) {
-        var x = element.matrix.e, y = element.matrix.f;
-        var p = this.paper.path(`M 100 100 l 30 30 m -30 0 l 30 -30`).attr({id:'killSymbol', stroke:'red', strokeWidth:10, opacity:0.4});
-        element.add(p);
+        this.drawKillMark(element);
+        //var p = this.paper.path(`M 100 100 l 30 30 m -30 0 l 30 -30`).attr({id:'killSymbol', stroke:'red', strokeWidth:10, opacity:0.4});
+        //element.add(p);
       }
     }
+  }
+
+  drawKillMark(element) {
+    var p = this.paper.path(`M 100 100 l 30 30 m -30 0 l 30 -30`)
+      .attr({id:'killSymbol', stroke:'red', strokeWidth:10, opacity:0.4});
+    element.add(p);
   }
 
   movePlayer(p, direction) {
@@ -70,6 +76,9 @@ class Board {
     if (this.isDM) {
       group.altDrag();
       this.setupKillable(group);
+    }
+    if (asset.killed) {
+      this.drawKillMark(group);
     }
     this.paper.zpd('save', (err, data) => {
       this.paper.zpd('destroy');
