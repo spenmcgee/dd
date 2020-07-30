@@ -61,18 +61,21 @@ class Board {
   async drawAsset(asset) {
     var id = asset.id;
     var url = asset.url;
-    var el = this.paper.svg(100, 100, 30, 30)
+    var assetSize = this.config.assetSize || 40;
+
+    var el = this.paper.svg(0, 0, 0, 0);
     var group = this.paper.group(el);
-    this.id2ElementTable[id] = group; //do this BEFORE the "await loadSvg" to avoid race against new incoming game-state
-    var svgData = await this.loadSvg(url);
-    el.append(svgData.node);
     group.elementType = 'asset';
     group.id = id;
+    this.id2ElementTable[id] = group; //do this before load, avoids race against new game-state
+    var svgData = await this.loadSvg(url);
+    el.add(svgData);
     var bb = group.getBBox();
-    var max = bb.w > bb.h ? bb.w : bb.h;
-    var scale = 40/max;
-    group.transform(`s${scale}`);
+    var scale = assetSize/Math.max(bb.width, bb.height);
+    el.attr({width:bb.width,height:bb.height});
+    group.transform(`s ${scale}`);
     this.paper.append(group);
+
     if (this.isDM) {
       group.altDrag();
       this.setupKillable(group);

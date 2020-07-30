@@ -15,6 +15,10 @@ router.get('/', (req, res) => {
   res.render("home.html", {room:room, user:user, color:color, isDM:isDM});
 });
 
+router.get('/test', (req, res) => {
+  res.render("test.html");
+});
+
 router.get('/api/:room/config', (req, res) => {
   var room = req.params.room;
   var board = BoardLoader.getConfig(room);

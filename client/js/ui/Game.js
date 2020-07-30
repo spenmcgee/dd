@@ -12,6 +12,7 @@ import { Mask } from '/client/js/data/Mask.js';
 import { Player } from '/client/js/data/Player.js';
 import { Asset } from '/client/js/data/Asset.js';
 import { Kill } from '/client/js/data/Kill.js';
+import { NameGenerator } from '/client/js/biz/NameGenerator.js';
 import snapPlugin from '/client/js/ui/snap.plugin.js';
 
 class Game {
@@ -53,7 +54,7 @@ class Game {
     var dmControls = new DMControls();
     menuEl.append(dmControls.el);
     dmControls.onAddAsset(async url => {
-      var assetId = `asset${this.elementCounter++}`;
+      var assetId = NameGenerator.generate();
       var m = await this.board.drawElement({elementType:'asset', id:assetId, url:url});
       messages.sendToServer(new Asset(this.board.paper, assetId, this.room, url, m));
     })
