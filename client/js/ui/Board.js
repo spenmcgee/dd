@@ -30,15 +30,16 @@ class Board {
       var marked = element.select("#killSymbol") ? true : false;
       if ((!marked) && (e.killed)) {
         this.drawKillMark(element);
-        //var p = this.paper.path(`M 100 100 l 30 30 m -30 0 l 30 -30`).attr({id:'killSymbol', stroke:'red', strokeWidth:10, opacity:0.4});
-        //element.add(p);
       }
     }
   }
 
   drawKillMark(element) {
-    var p = this.paper.path(`M 100 100 l 30 30 m -30 0 l 30 -30`)
-      .attr({id:'killSymbol', stroke:'red', strokeWidth:10, opacity:0.4});
+    var bb = element.getBBox();
+    var lm = element.transform().localMatrix;
+    var w = bb.width/lm.a, h = bb.height/lm.a;
+    var p = this.paper.path(`m 0 0 l ${w} ${h} m -${w} 0 l ${w} -${h}`)
+      .attr({id:'killSymbol', stroke:'red', strokeWidth:20, opacity:0.4});
     element.add(p);
   }
 
