@@ -23,14 +23,14 @@ class Board {
   }
 
   transformElement(e, localMatrix) {
-    if (localMatrix) {
-      var m = Snap.matrix(localMatrix.a, localMatrix.b, localMatrix.c, localMatrix.d, localMatrix.e, localMatrix.f);
-      var element = this.id2ElementTable[e.id];
-      element.transform(m);
-      var marked = element.select("#killSymbol") ? true : false;
-      if ((!marked) && (e.killed)) {
-        this.drawKillMark(element);
-      }
+    if (!(e.id in this.id2ElementTable)) return; //drawAsset hasnt finished yet
+    if (!localMatrix) return;
+    var m = Snap.matrix(localMatrix.a, localMatrix.b, localMatrix.c, localMatrix.d, localMatrix.e, localMatrix.f);
+    var element = this.id2ElementTable[e.id];
+    element.transform(m);
+    var marked = element.select("#killSymbol") ? true : false;
+    if ((!marked) && (e.killed)) {
+      this.drawKillMark(element);
     }
   }
 
@@ -62,13 +62,11 @@ class Board {
   async drawAsset(asset) {
     var id = asset.id;
     var url = asset.url;
-    var assetSize = this.config.assetSize || 40;
-
-    var el = this.paper.svg(0, 0, 0, 0);
+    var assetSize = this.config && this.config.assetSize || 40;
+    var el = this.paper.svg(100, 100, assetSize, assetSize);
     var group = this.paper.group(el);
     group.elementType = 'asset';
     group.id = id;
-    this.id2ElementTable[id] = group; //do this before load, avoids race against new game-state
     var svgData = await this.loadSvg(url);
     el.add(svgData);
     var bb = group.getBBox();
@@ -76,7 +74,6 @@ class Board {
     el.attr({width:bb.width,height:bb.height});
     group.transform(`s ${scale}`);
     this.paper.append(group);
-
     if (this.isDM) {
       group.altDrag();
       this.setupKillable(group);
@@ -87,6 +84,7 @@ class Board {
     this.paper.zpd('save', (err, data) => {
       this.paper.zpd('destroy');
       this.paper.zpd({load:data});
+      this.id2ElementTable[id] = group; //do this before load, avoids race against new game-state
     })
     return group.transform().localMatrix;
   }

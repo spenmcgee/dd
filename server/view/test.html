@@ -4,46 +4,30 @@
 <script type="text/javascript" src="lib/snapsvg/dist/snap.svg-min.js"></script>
 <script type="text/javascript" src="lib/snap.svg.zpd/snap.svg.zpd.js"></script>
 <script type="module">
-  //import { start } from '/client/js/start.js';
+  import { Board } from '/client/js/ui/Board.js';
+  import snapPlugin from '/client/js/ui/snap.plugin.js';
   document.addEventListener("DOMContentLoaded", function(event) {
     start();
   });
   async function loadSvg(url) {
     return new Promise(r => Snap.load(url, data => r(data)));
   }
+  var t1 = 's 0.13432014772155568';
   async function start() {
+    snapPlugin.setup();
     var paper = Snap("#board");
-    var svgData = await loadSvg('/asset/fartlips-mime.svg');
-    var g = paper.group(svgData);
-    console.log("bb1", g.getBBox())
-
-    var el = paper.svg(0, 0, 0, 0);
-    var group = paper.group(el);
-    el.add(svgData);
-    paper.append(group);
-    var bb = group.getBBox();
-    console.log("bb2", bb)
-    var scale = 40/Math.max(bb.width, bb.height);
-    console.log("scale", scale)
-    el.attr({width:bb.width,height:bb.height})
-    group.transform(`s ${scale}`);
-
-    console.log(group)
-
-
-    //var bb = group.getBBox();
-    //var max = bb.w > bb.h ? bb.w : bb.h;
-    //var scale = 30/max;
-    //console.log("bb", scale, bb)
-    //group.transform(`s${scale}`);
-
-    paper.rect(0,0,100,100)
-    .attr({ stroke: '#123456', 'strokeWidth': 10, fill: 'red', 'opacity': 0.4 });
-
-    //paper.zpd('save', (err, data) => {
-    //  paper.zpd('destroy');
-    //  paper.zpd({load:data});
-    //})
+    //var svgData = await loadSvg('/asset/fartlips-goblin.svg');
+    var board = new Board('DM', 'fartlips', '#board');
+    board.config = {assetSize:60}
+    var p = board.drawAsset({id:'a1',url:'/asset/fartlips-mime.svg'})
+    var el = board.id2ElementTable['a1'];
+    var lm = Snap.matrix(0.1343, 0, 0, 0.1343, 100,100);
+    //board.transformElement(el, lm)
+    // console.log("done")
+    // p.then(m => {
+    //   console.log("later", m)
+    //   board.transformElement(el, lm)
+    // })
   }
 </script>
 </head>
