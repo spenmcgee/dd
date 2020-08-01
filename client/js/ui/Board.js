@@ -84,7 +84,7 @@ class Board {
     this.paper.zpd('save', (err, data) => {
       this.paper.zpd('destroy');
       this.paper.zpd({load:data});
-      this.id2ElementTable[id] = group; //do this before load, avoids race against new game-state
+      this.id2ElementTable[id] = group;
     })
     return group.transform().localMatrix;
   }
