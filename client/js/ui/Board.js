@@ -127,8 +127,8 @@ class Board {
 
   redrawLayers(maskControls) {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.paper.id);
-    if (this.isDM)
-      maskControls.drawMaskBg();
+    //if (this.isDM)
+    //  maskControls.drawMaskBg();
     for (var id of Object.keys(this.id2ElementTable)) {
       var el = this.id2ElementTable[id];
       if (el.elementType == 'asset') {

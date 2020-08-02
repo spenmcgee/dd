@@ -81,6 +81,7 @@ class MaskControls {
     var rect = this.board.paper.rect(bb).attr({fill:'white'});
     rect.transform(inverseCoordSpaceMatrix.toTransformString());
     var applyMask = this.board.paper.g(rect, this.maskbg);
+
     this.maskbg.attr({fill:'black', opacity:1});
     zpdGroup.add(applyMask);
     this.fullMask = this.board.paper.rect(rect.getBBox()).attr({mask:applyMask});
