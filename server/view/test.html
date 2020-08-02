@@ -19,15 +19,11 @@
     //var svgData = await loadSvg('/asset/fartlips-goblin.svg');
     var board = new Board('DM', 'fartlips', '#board');
     board.config = {assetSize:60}
-    var p = board.drawAsset({id:'a1',url:'/asset/fartlips-mime.svg'})
+    console.log("drawAsset")
+    await board.drawAsset({id:'a1',url:'/asset/fartlips-mime.svg'})
     var el = board.id2ElementTable['a1'];
-    var lm = Snap.matrix(0.1343, 0, 0, 0.1343, 100,100);
-    //board.transformElement(el, lm)
-    // console.log("done")
-    // p.then(m => {
-    //   console.log("later", m)
-    //   board.transformElement(el, lm)
-    // })
+    console.log("drawKillMark", el, el.transform())
+    board.drawKillMark(el);
   }
 </script>
 </head>

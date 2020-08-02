@@ -39,7 +39,7 @@ class Board {
     var lm = element.transform().localMatrix;
     var w = bb.width/lm.a, h = bb.height/lm.a;
     var p = this.paper.path(`m 0 0 l ${w} ${h} m -${w} 0 l ${w} -${h}`)
-      .attr({id:'killSymbol', stroke:'red', strokeWidth:20, opacity:0.4});
+     .attr({id:'killSymbol', stroke:'red', strokeWidth:20, opacity:0.4});
     element.add(p);
   }
 
@@ -63,8 +63,9 @@ class Board {
     var id = asset.id;
     var url = asset.url;
     var assetSize = this.config && this.config.assetSize || 40;
-    var el = this.paper.svg(100, 100, assetSize, assetSize);
+    var el = this.paper.svg();
     var group = this.paper.group(el);
+    group.attr({width:assetSize, height:assetSize})
     group.elementType = 'asset';
     group.id = id;
     var svgData = await this.loadSvg(url);
@@ -100,10 +101,8 @@ class Board {
   }
 
   drawPlayer(p) {
-    //var text = this.paper.text(p.x+PIECE_SIZE*2, p.y+PIECE_SIZE/2, p.user);
     var circ = this.paper.circle(p.x, p.y, 10);
     circ.attr('fill', p.color);
-    //var group = this.paper.group(circ, text);
     var group = this.paper.group(circ);
     group.elementType = 'player';
     group.id = p.id;
@@ -128,17 +127,20 @@ class Board {
 
   redrawLayers(maskControls) {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.paper.id);
-    maskControls.drawMaskBg();
+    if (this.isDM)
+      maskControls.drawMaskBg();
     for (var id of Object.keys(this.id2ElementTable)) {
       var el = this.id2ElementTable[id];
-      if (el.elementType == 'asset')
+      if (el.elementType == 'asset') {
         zpdGroup.add(el);
+      }
     }
     maskControls.drawFullMask();
     for (var id of Object.keys(this.id2ElementTable)) {
       var el = this.id2ElementTable[id];
-      if (el.elementType == 'player')
+      if (el.elementType == 'player') {
         zpdGroup.add(el);
+      }
     }
   }
 

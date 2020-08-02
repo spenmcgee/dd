@@ -56,6 +56,7 @@ class Game {
     dmControls.onAddAsset(async url => {
       var assetId = NameGenerator.generate();
       var m = await this.board.drawElement({elementType:'asset', id:assetId, url:url});
+      this.board.redrawLayers(this.maskControls);
       messages.sendToServer(new Asset(this.board.paper, assetId, this.room, url, m));
     })
     this.wsClient.onOpen(e => {
@@ -116,19 +117,15 @@ class Game {
         var elements = Object.keys(this.elements).map(id => this.elements[id]);
         this.board.redrawElements(elements);
         this.roster.mergeGameState(data);
+        this.board.redrawLayers(this.maskControls);
       }
     })
 
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'mask',
       handler: data => {
-        if ((this.isDM) && (data.user == 'DM')) { //rebroadcast from a DM join event
-          this.maskControls.setRects(data.rects, false);
-          this.board.redrawLayers(this.maskControls);
-        } else if (!this.isDM) {
-          this.maskControls.setRects(data.rects, true);
-          this.board.redrawLayers(this.maskControls);
-        }
+        this.maskControls.setRects(data.rects);
+        this.board.redrawLayers(this.maskControls);
       }
     })
 

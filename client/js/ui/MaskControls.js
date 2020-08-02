@@ -8,7 +8,7 @@ class MaskControls {
     this.maskbg = null;
     this.fullMask = null;
     this.rects = [];
-    this.maskMode = false;
+    this.maskMode = !board.isDM;
 
     this.maskButton = document.createElement('button');
     this.maskButton.append("mask");
@@ -49,14 +49,16 @@ class MaskControls {
 
   drawMaskBg() {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
-    if (this.maskBg)
-      zpdGroup.add(this.maskBg);
+    if (this.maskbg) {
+      zpdGroup.add(this.maskbg);
+    }
   }
 
   drawFullMask() {
     var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
-    if (this.fullMask && (this.maskMode))
+    if (this.fullMask && (this.maskMode)) {
       zpdGroup.add(this.fullMask);
+    }
   }
 
   editMaskMode() {
@@ -140,7 +142,7 @@ class MaskControls {
     this.applyMaskCallback = applyMaskCallback;
   }
 
-  setRects(rects, isFull) {
+  setRects(rects) {
     if ((!rects) || (rects.length == 0)) return;
     this.rects.forEach(r => r.remove());
     if (this.mask) this.mask.remove();
@@ -159,7 +161,7 @@ class MaskControls {
     var bb = this.mask.getBBox();
     this.maskbg = paper.rect(bb).attr({mask:this.mask, fill:'yellow', opacity:0.3});
     zpdGroup.add(this.maskbg);
-    if (isFull)
+    if (this.maskMode)
       this.buildFullMask();
   }
 
