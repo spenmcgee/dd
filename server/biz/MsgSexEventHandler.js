@@ -4,7 +4,7 @@ var sexes = [
   'some dildos fall off the shelf',
   'immediate boner',
   'glances sexily',
-  'eskimo kisses you gently',
+  'kisses you gently while maintaining eye contact',
   'performs an attitude pose',
   'kisses your neck tenderly',
   'you have sex but get crabs'

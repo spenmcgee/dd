@@ -2027,10 +2027,8 @@ class NameGenerator {
 
   static generate() {
     var r1 = Math.floor(Math.random() * german.length);
-    //var r2 = Math.floor(Math.random() * nouns.length);
-    //var name = `${adjectives[r1]} ${nouns[r2]}`;
     var name = german[r1];
-    return name;
+    return name.replace(/[^a-zA-Z0-9]+/ig, '-');
   }
 }
 

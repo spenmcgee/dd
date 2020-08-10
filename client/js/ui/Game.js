@@ -24,13 +24,28 @@ class Game {
     this.room = room;
     this.color = color;
     this.elements = {};
-    this.board = new Board(this.user, this.room, "#board");
     this.isDM = user=='DM';
     this.wsClient = wsClient;
-    this.elementCounter = 1;
+    this.messages = new Messages(wsClient);
   }
 
-  async setupPlayer(messages) {
+  async getConfig(room) {
+    var resp = await fetch(`/api/${room}/config`, {
+      method: 'get'
+    })
+    var json = await resp.json();
+    return json;
+  }
+
+  async setupDM() {
+    this.wsClient.onOpen(e => {
+      this.messages.sendToServer(new Join());
+      this.messages.sendToServer(new Text("joining room"));
+this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
+    })
+  }
+
+  async setupPlayer() {
     var menuEl = document.getElementById("menu");
     var moveControls = new MoveControls();
     menuEl.append(moveControls.el);
@@ -38,110 +53,42 @@ class Game {
       var player = this.elements[this.id];
       var localMatrix = this.board.movePlayer(player, direction);
       var d = new Move(localMatrix);
-      messages.sendToServer(d);
+      this.messages.sendToServer(d);
     })
     var p = new Player(this.board.paper, this.id, this.user, this.room, this.color);
     this.newElement(p);
     this.wsClient.onOpen(e => {
-      messages.sendToServer(new Join());
-      messages.sendToServer(p);
-      messages.sendToServer(new Text("joining room"));
+      this.messages.sendToServer(new Join());
+      this.messages.sendToServer(p);
+      this.messages.sendToServer(new Text("joining room"));
     })
   }
 
-  async setupDM(messages) {
-    var menuEl = document.getElementById("menu");
-    var dmControls = new DMControls();
-    menuEl.append(dmControls.el);
-    dmControls.onAddAsset(async url => {
-      var assetId = NameGenerator.generate();
-      var m = await this.board.drawElement({elementType:'asset', id:assetId, url:url});
-      this.board.redrawLayers(this.maskControls);
-      messages.sendToServer(new Asset(this.board.paper, assetId, this.room, url, m));
-    })
-    this.wsClient.onOpen(e => {
-      messages.sendToServer(new Join());
-      messages.sendToServer(new Text("joining room"));
-    })
-    this.maskControls.onApply(() => this.board.redrawLayers(this.maskControls));
-    this.maskControls.onMask(rects => {
-      this.board.redrawLayers(this.maskControls);
-      messages.sendToServer(new Mask(rects));
-    })
-    menuEl.append(this.maskControls.el);
-    this.board.onKill((id, el) => {
-      messages.sendToServer(new Kill(id));
-      messages.sendToServer(new Text(`${id} has been defeated`));
+  addAsset(url, id) {
+    var assetId = id || NameGenerator.generate();
+    this.messages.sendToServer(new Asset(assetId, this.room, url, null, false));
+  }
+
+  setupElementMovedEvent() {
+    this.board.onElementMoved((svgElement, transform) => {
+      //var localMatrix = el.transform().localMatrix
+      var m = new Move(transform.localMatrix);
+      m.elementType = svgElement.elementType;
+      m.id = svgElement.id;
+      this.messages.sendToServer(m);
+      if (svgElement.elementType == 'player')
+        this.messages.sendToServer(new Text(`overriding position of ${svgElement.user}`));
     })
   }
 
-  async setup() {
-
-    var messages = new Messages(this.wsClient);
-
-    snapPlugin.setup();
-    snapPlugin.onDragEnd((el,t) => { //DM override
-      var localMatrix = el.transform().localMatrix
-      var m = new Move(localMatrix);
-      m.elementType = el.elementType;
-      m.id = el.id;
-      //m.user = el.user;
-      //m.room = el.room;
-      messages.sendToServer(m);
-      if (el.elementType == 'player')
-        messages.sendToServer(new Text(`overriding position of ${el.user}`));
-    })
-
-    var mainEl = document.getElementById("main");
-    await this.board.drawBoard(mainEl);
-
-    var formEl = document.getElementById("chat");
-    var messagesEl = document.getElementById("messages");
-    this.chat = new Chat(formEl, messagesEl, this.wsClient);
-
-    this.roster = new Roster();
-    var rosterEl = document.getElementById("roster");
-    rosterEl.append(this.roster.el);
-
-    this.maskControls = new MaskControls(this.board);
-
-    this.wsClient.addMessageHandler({
-      match: data => data.meta == 'text',
-      handler: this.chat
-    })
-
+  setupGameStateEvent() {
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'game-state',
       handler: async data => {
         await this.mergeGameState(data);
-        var elements = Object.keys(this.elements).map(id => this.elements[id]);
-        this.board.redrawElements(elements);
-        this.roster.mergeGameState(data);
-        this.board.redrawLayers(this.maskControls);
+        this.board.redrawElements(this.elements);
       }
     })
-
-    this.wsClient.addMessageHandler({
-      match: data => data.meta == 'mask',
-      handler: data => {
-        this.maskControls.setRects(data.rects);
-        this.board.redrawLayers(this.maskControls);
-      }
-    })
-
-    if (this.isDM) {
-      await this.setupDM(messages);
-    } else {
-      await this.setupPlayer(messages);
-    }
-
-  }
-
-  async newElement(el) {
-    if (!(el.id in this.elements)) {
-      this.elements[el.id] = el;
-      await this.board.drawElement(el);
-    }
   }
 
   async mergeElement(element) {
@@ -153,7 +100,7 @@ class Game {
 
   async mergePlayer(p) {
     if (!(p.id in this.elements)) {
-      await this.newElement(new Player(this.board.paper, p.id, p.user, p.room, p.color, p.localMatrix));
+      await this.newElement(new Player(p.id, p.user, p.room, p.color, p.localMatrix));
     } else {
       this.elements[p.id].color = p.color;
       this.elements[p.id].localMatrix = p.localMatrix;
@@ -162,7 +109,7 @@ class Game {
 
   async mergeAsset(a) {
     if (!(a.id in this.elements)) {
-      await this.newElement(new Asset(this.board.paper, a.id, a.room, a.url, a.localMatrix, a.killed));
+      await this.newElement(new Asset(a.id, a.room, a.url, a.localMatrix, a.killed));
     } else {
       this.elements[a.id].url = a.url;
       this.elements[a.id].localMatrix = a.localMatrix;
@@ -171,9 +118,31 @@ class Game {
   }
 
   async mergeGameState(data) {
-    for (var el of data.elements) {
+    for (var el of Object.values(data.elements)) {
       await this.mergeElement(el);
     }
+  }
+
+  async newElement(el) {
+    if (!(el.id in this.elements)) {
+      this.elements[el.id] = el;
+    }
+  }
+
+  async setup() {
+    this.config = await this.getConfig(this.room);
+    this.board = new Board(this.user, this.room, "#board", this.config);
+    await this.board.draw(document.getElementById("main"), this.config.boardSvgUrl);
+
+    this.setupGameStateEvent();
+    this.setupElementMovedEvent();
+
+    if (this.isDM) {
+      await this.setupDM();
+    } else {
+      await this.setupPlayer();
+    }
+
   }
 
 }

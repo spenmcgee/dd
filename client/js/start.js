@@ -4,12 +4,10 @@ import { WebsocketClient } from '/client/js/WebsocketClient.js';
 import Navigo from '/lib/navigo/lib/navigo.es.js';
 
 async function boardStart(room) {
-
   var id = Cookie.getCookie("id");
   var user = Cookie.getCookie("user");
   var room = Cookie.getCookie("room");
   var color = Cookie.getCookie("color");
-
   var wsClient = new WebsocketClient();
   var game = new Game(id, user, room, color, wsClient);
   await game.setup();

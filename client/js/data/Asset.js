@@ -2,10 +2,9 @@ import { Element } from './Element.js';
 
 class Asset extends Element {
 
-  constructor(paper, id, room, url, localMatrix, killed) {
+  constructor(id, room, url, localMatrix, killed) {
     super();
     this.elementType = 'asset';
-    this.paper = paper;
     this.id = id;
     this.room = room;
     this.url = url;

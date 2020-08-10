@@ -82,7 +82,7 @@ msgServer.addHandler({
   match: data => data.meta == 'move',
   handler: (data, wss, ws) => {
     var gs = gm.getGameState(data.room);
-    gs.elements.forEach(el => { //apply move to element
+    Object.values(gs.elements).forEach(el => { //apply move to element
       if (el.id == data.id) {
         el.localMatrix = data.localMatrix;
       }
