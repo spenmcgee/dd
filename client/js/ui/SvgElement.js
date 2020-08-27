@@ -12,7 +12,7 @@ class SvgElement {
     this.elementType = elData.elementType;
     this.user = elData.user;
     this.room = elData.room;
-    console.log("here is elData", elData)
+    this.localMatrix = elData.localMatrix;
   }
 
   onDragEnd(onDragEndCallback) {

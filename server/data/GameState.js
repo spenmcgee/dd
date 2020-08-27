@@ -3,7 +3,7 @@ class GameState {
   constructor(room) {
     this.meta = 'game-state';
     this.room = room;
-    this.elements = {};
+    this.pieces = {};
     this.maskRects = null;
   }
 
@@ -15,13 +15,13 @@ class GameState {
     return this.maskRects;
   }
 
-  hasElement(id) {
-    if (id in this.elements);
+  hasPiece(id) {
+    return (id in this.pieces);
   }
 
-  addElement(el) {
-    if (!this.hasElement(el.id))
-      this.elements[el.id] = el;
+  addPiece(el) {
+    if (!this.hasPiece(el.id))
+      this.pieces[el.id] = el;
   }
 
   addDM(data) {

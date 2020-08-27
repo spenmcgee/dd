@@ -49,10 +49,10 @@ msgServer.addHandler({
   }
 })
 msgServer.addHandler({
-  match: data => data.meta == 'element',
+  match: data => data.meta == 'piece',
   handler: data => {
     var gs = gm.getGameState(data.room);
-    gs.addElement(data);
+    gs.addPiece(data);
     return [gs];
   }
 })
@@ -82,7 +82,7 @@ msgServer.addHandler({
   match: data => data.meta == 'move',
   handler: (data, wss, ws) => {
     var gs = gm.getGameState(data.room);
-    Object.values(gs.elements).forEach(el => { //apply move to element
+    Object.values(gs.pieces).forEach(el => { //apply move to piece
       if (el.id == data.id) {
         el.localMatrix = data.localMatrix;
       }
@@ -94,7 +94,7 @@ msgServer.addHandler({
   match: data => data.meta == 'kill',
   handler: (data, wss, ws) => {
     var gs = gm.getGameState(data.room);
-    gs.elements.forEach(el => { //apply move to element
+    gs.pieces.forEach(el => { //apply move to piece
       if (el.id == data.id) {
         el.killed = true;
       }

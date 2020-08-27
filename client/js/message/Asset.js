@@ -1,10 +1,10 @@
-import { Element } from './Element.js';
+import { Piece } from './Piece.js';
 
-class Asset extends Element {
+class Asset extends Piece {
 
   constructor(id, room, url, localMatrix, killed) {
     super();
-    this.elementType = 'asset';
+    this.pieceType = 'asset';
     this.id = id;
     this.room = room;
     this.url = url;
@@ -16,7 +16,7 @@ class Asset extends Element {
   toString() {
     return JSON.stringify({
       meta: this.meta,
-      elementType: this.elementType,
+      pieceType: this.pieceType,
       id: this.id,
       room: this.room,
       url: this.url,

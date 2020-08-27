@@ -5,13 +5,15 @@ import { Roster } from '/client/js/ui/Roster.js';
 import { MaskControls } from '/client/js/ui/MaskControls.js';
 import { DMControls } from '/client/js/ui/DMControls.js';
 import { Messages } from '/client/js/biz/Messages.js';
-import { Text } from '/client/js/data/Text.js';
-import { Join } from '/client/js/data/Join.js';
-import { Move } from '/client/js/data/Move.js';
-import { Mask } from '/client/js/data/Mask.js';
-import { Player } from '/client/js/data/Player.js';
-import { Asset } from '/client/js/data/Asset.js';
-import { Kill } from '/client/js/data/Kill.js';
+import { Join as MsgJoin } from '/client/js/message/Join.js';
+import { Text as MsgText } from '/client/js/message/Text.js';
+import { Move as MsgMove } from '/client/js/message/Move.js';
+import { Mask as MsgMask } from '/client/js/message/Mask.js';
+import { Kill as MsgKill } from '/client/js/message/Kill.js';
+import { Asset as MsgAsset } from '/client/js/message/Asset.js';
+import { Player as MsgPlayer } from '/client/js/message/Player.js';
+import { SvgPlayer } from '/client/js/ui/SvgPlayer.js';
+import { SvgAsset } from '/client/js/ui/SvgAsset.js';
 import { NameGenerator } from '/client/js/biz/NameGenerator.js';
 
 class Game {
@@ -22,7 +24,7 @@ class Game {
     this.user = user;
     this.room = room;
     this.color = color;
-    this.elements = {};
+    this.svgPieces = {};
     this.isDM = user=='DM';
     this.wsClient = wsClient;
     this.messages = new Messages(wsClient);
@@ -38,8 +40,8 @@ class Game {
 
   async setupDM() {
     this.wsClient.onOpen(e => {
-      this.messages.sendToServer(new Join());
-      this.messages.sendToServer(new Text("joining room"));
+      this.messages.sendToServer(new MsgJoin());
+      this.messages.sendToServer(new MsgText("joining room"));
 this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     })
   }
@@ -49,35 +51,33 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     var moveControls = new MoveControls();
     menuEl.append(moveControls.el);
     moveControls.onMove(direction => {
-      //var player = this.elements[this.id];
-      var player = this.board.svgElements[this.id];
-      console.log("here is player", this.id, player)
+      var player = this.svgPieces[this.id];
       var localMatrix = player.move(player, direction);
-      var d = new Move(localMatrix);
+      var d = new MsgMove(localMatrix);
       this.messages.sendToServer(d);
     })
-    var p = new Player(this.board.paper, this.id, this.user, this.room, this.color);
-    this.newElement(p);
+    //this.svgPieces[this.id] = new Player(this.board.paper, this.id, this.user, this.room, this.color);
+    //this.svgPieces[this.id] = new SvgPlayer(this.board.paper, this.id, this.user, this.room, this.color);
     this.wsClient.onOpen(e => {
-      this.messages.sendToServer(new Join());
-      this.messages.sendToServer(p);
-      this.messages.sendToServer(new Text("joining room"));
+      this.messages.sendToServer(new MsgJoin());
+      this.messages.sendToServer(new MsgPlayer(this.id, this.user, this.room, this.color));
+      this.messages.sendToServer(new MsgText("joining room"));
     })
   }
 
   addAsset(url, id) {
     var assetId = id || NameGenerator.generate();
-    this.messages.sendToServer(new Asset(assetId, this.room, url, null, false));
+    this.messages.sendToServer(new MsgAsset(assetId, this.room, url, null, false));
   }
 
-  setupElementDraggedEvent() {
-    this.board.onElementDragged((svgElement, transform) => {
+  setupPieceDraggedEvent() {
+    this.board.onPieceDragged((svgPiece, transform) => {
       var m = new Move(transform.localMatrix);
-      m.elementType = svgElement.elementType;
-      m.id = svgElement.id;
+      m.pieceType = svgPiece.pieceType;
+      m.id = svgPiece.id;
       this.messages.sendToServer(m);
-      if (svgElement.elementType == 'player')
-        this.messages.sendToServer(new Text(`overriding position of ${svgElement.user}`));
+      if (svgPiece.pieceType == 'player')
+        this.messages.sendToServer(new Text(`overriding position of ${svgPiece.user}`));
     })
   }
 
@@ -86,46 +86,49 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
       match: data => data.meta == 'game-state',
       handler: async data => {
         await this.mergeGameState(data);
-        this.board.redrawElements(this.elements);
+        this.redrawPieces(this.svgPieces);
       }
     })
   }
 
-  async mergeElement(element) {
-    if (element.elementType == 'player')
-      await this.mergePlayer(element);
-    else if (element.elementType == 'asset')
-      await this.mergeAsset(element);
+  redrawPieces(svgPieces) {
+    Object.values(svgPieces).forEach(svgPiece => {
+      svgPiece.draw();
+    })
+  }
+
+  async mergePiece(piece) {
+    if (piece.pieceType == 'player')
+      await this.mergePlayer(piece);
+    else if (piece.pieceType == 'asset')
+      await this.mergeAsset(piece);
   }
 
   async mergePlayer(p) {
-    if (!(p.id in this.elements)) {
-      await this.newElement(new Player(p.id, p.user, p.room, p.color, p.localMatrix));
+    var player = null;
+    if (p.id in this.svgPieces) {
+      player = this.svgPieces[p.id];
     } else {
-      this.elements[p.id].color = p.color;
-      this.elements[p.id].localMatrix = p.localMatrix;
+      player = new SvgPlayer(p, this.board, this.board.zpdGroup, this.config);
+      this.svgPieces[p.id] = player;
     }
+    player.set(p);
   }
 
   async mergeAsset(a) {
-    if (!(a.id in this.elements)) {
-      await this.newElement(new Asset(a.id, a.room, a.url, a.localMatrix, a.killed));
+    var asset = null;
+    if (a.id in this.svgPieces) {
+      asset = this.svgPieces[a.id];
     } else {
-      this.elements[a.id].url = a.url;
-      this.elements[a.id].localMatrix = a.localMatrix;
-      this.elements[a.id].killed = a.killed;
+      asset = new SvgAsset(a, this.board, this.board.zpdGroup, this.config);
+      this.svgPieces[a.id] = asset;
     }
+    asset.set(a);
   }
 
   async mergeGameState(data) {
-    for (var el of Object.values(data.elements)) {
-      await this.mergeElement(el);
-    }
-  }
-
-  async newElement(el) {
-    if (!(el.id in this.elements)) {
-      this.elements[el.id] = el;
+    for (var el of Object.values(data.pieces)) {
+      await this.mergePiece(el);
     }
   }
 
@@ -135,7 +138,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     await this.board.draw(this.config.boardSvgUrl);
 
     this.setupGameStateEvent();
-    this.setupElementDraggedEvent();
+    this.setupPieceDraggedEvent();
 
     if (this.isDM) {
       await this.setupDM();

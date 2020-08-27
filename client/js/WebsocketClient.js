@@ -1,6 +1,6 @@
 import { Cookie } from './Cookie.js';
-import { Text } from './data/Text.js';
-import { Join } from './data/Join.js';
+import { Text } from './message/Text.js';
+import { Join } from './message/Join.js';
 
 class WebsocketClient {
 

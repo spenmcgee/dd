@@ -9,6 +9,14 @@ class SvgPlayer extends SvgElement {
     this.color = elData.color;
   }
 
+  set(elData) {
+    this.color = elData.color;
+    if (elData.localMatrix) {
+      var lm = elData.localMatrix;
+      this.localMatrix = Snap.matrix(lm.a, lm.b, lm.c, lm.d, lm.e, lm.f);
+    }
+  }
+
   move(p, direction) {
     var x = direction[2]*-PIECE_SIZE||direction[3]*PIECE_SIZE, y = direction[0]*-PIECE_SIZE||direction[1]*PIECE_SIZE;
     var m = this.el.transform().localMatrix;
@@ -27,8 +35,10 @@ class SvgPlayer extends SvgElement {
         this.setupDraggable(group);
       }
       this.el = group;
-    } else {
-
+      this.board.zpdGroup.add(this.el);
+    }
+    if (this.localMatrix) {
+      this.el.transform(this.localMatrix);
     }
   }
 

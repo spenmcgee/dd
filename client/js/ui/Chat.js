@@ -1,4 +1,4 @@
-import { Text } from '/client/js/data/Text.js';
+import { Text } from '/client/js/message/Text.js';
 
 class Chat {
 

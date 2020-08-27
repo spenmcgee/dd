@@ -5,6 +5,13 @@ class SvgAsset extends SvgElement {
   constructor(elData, board, zpdGroup, config) {
     super(elData, board, zpdGroup, config);
     this.url = elData.url;
+    this.killed = elData.killed;
+  }
+
+  set(elData) {
+    this.url = elData.url;
+    this.localMatrix = elData.localMatrix;
+    this.killed = elData.killed;
   }
 
   async loadSvg(url) {

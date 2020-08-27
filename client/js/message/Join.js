@@ -1,11 +1,10 @@
 import { Message } from './Message.js';
 
-class Join extends Message {
+class Join extends Message { //connects wsclient to server
 
   constructor() {
     super();
     this.meta = 'join';
-    //this.color = color;
   }
 
   toString() {
@@ -13,8 +12,7 @@ class Join extends Message {
       meta: 'join',
       id: this.id,
       room: this.room,
-      user: this.user,
-      //color: this.color
+      user: this.user
     }
     return JSON.stringify(data);
   }
