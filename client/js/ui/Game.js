@@ -56,8 +56,6 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
       var d = new MsgMove(localMatrix);
       this.messages.sendToServer(d);
     })
-    //this.svgPieces[this.id] = new Player(this.board.paper, this.id, this.user, this.room, this.color);
-    //this.svgPieces[this.id] = new SvgPlayer(this.board.paper, this.id, this.user, this.room, this.color);
     this.wsClient.onOpen(e => {
       this.messages.sendToServer(new MsgJoin());
       this.messages.sendToServer(new MsgPlayer(this.id, this.user, this.room, this.color));
@@ -87,6 +85,15 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
       handler: async data => {
         await this.mergeGameState(data);
         this.redrawPieces(this.svgPieces);
+      }
+    })
+  }
+
+  setupTextEvent() {
+    this.wsClient.addMessageHandler({
+      match: data => data.meta == 'text',
+      handler: async data => {
+        this.chat.handle(data);
       }
     })
   }
@@ -142,13 +149,19 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     await this.board.draw(this.config.boardSvgUrl);
 
     this.setupGameStateEvent();
-    //this.setupPieceDraggedEvent();
+    this.setupTextEvent();
 
     if (this.isDM) {
       await this.setupDM();
     } else {
       await this.setupPlayer();
     }
+
+    this.chat = new Chat(
+      document.getElementById('chat'),
+      document.getElementById('messages'),
+      this.wsClient
+    );
 
   }
 
