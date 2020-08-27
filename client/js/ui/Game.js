@@ -44,6 +44,13 @@ class Game {
       this.messages.sendToServer(new MsgText("joining room"));
 this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     })
+    var menuEl = document.getElementById("menu");
+    var dmControls = new DMControls();
+    menuEl.append(dmControls.el);
+    dmControls.onAddAsset(async url => {
+      var assetId = NameGenerator.generate();
+      this.addAsset(url, assetId);
+    })
   }
 
   async setupPlayer() {
