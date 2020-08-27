@@ -44,13 +44,26 @@ class Game {
       this.messages.sendToServer(new MsgText("joining room"));
 this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     })
+    var submenuEl = document.getElementById("submenu");
     var menuEl = document.getElementById("menu");
-    var dmControls = new DMControls();
-    menuEl.append(dmControls.el);
+    var controlsEl = document.getElementById("controls");
+    var dmControls = new DMControls(submenuEl);
     dmControls.onAddAsset(async url => {
       var assetId = NameGenerator.generate();
       this.addAsset(url, assetId);
     })
+    // this.maskControls.onApply(() => this.board.redrawLayers(this.maskControls));
+    // this.maskControls.onMask(rects => {
+    //   this.board.redrawLayers(this.maskControls);
+    //   messages.sendToServer(new Mask(rects));
+    // })
+    // this.board.onKill((id, el) => {
+    //   messages.sendToServer(new Kill(id));
+    //   messages.sendToServer(new Text(`${id} has been defeated`));
+    // })
+
+    controlsEl.append(dmControls.el);
+    controlsEl.append(this.maskControls.el);
   }
 
   async setupPlayer() {
@@ -157,6 +170,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
 
     this.setupGameStateEvent();
     this.setupTextEvent();
+    this.maskControls = new MaskControls(this.board);
 
     if (this.isDM) {
       await this.setupDM();

@@ -61,6 +61,9 @@
   button.enabled {
     background-color: red;
   }
+  .hidden {
+    display: none;
+  }
 </style>
 <script type="text/javascript" src="/lib/snapsvg/dist/snap.svg.js"></script>
 <script type="text/javascript" src="/lib/snap.svg.zpd/snap.svg.zpd.js"></script>
@@ -81,6 +84,8 @@
     <a href="/{{room}}/config">Config</a> /
     <a href="/{{room}}/asset">Assets</a> /
   {% endif %}
+  <span id="controls"></span>
+  <div id="submenu"></div>
 </div>
 
 <div id="chat-column">
