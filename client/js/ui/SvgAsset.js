@@ -10,8 +10,11 @@ class SvgAsset extends SvgElement {
 
   set(elData) {
     this.url = elData.url;
-    this.localMatrix = elData.localMatrix;
     this.killed = elData.killed;
+    if (elData.localMatrix) {
+      var lm = elData.localMatrix;
+      this.localMatrix = Snap.matrix(lm.a, lm.b, lm.c, lm.d, lm.e, lm.f);
+    }
   }
 
   async loadSvg(url) {
@@ -37,8 +40,9 @@ class SvgAsset extends SvgElement {
       // if (asset.killed) {
         //this.drawKillMark(this.el);
       // }
-    } else {
-      //translate and maybe scale
+    }
+    if (this.localMatrix) {
+      this.el.transform(this.localMatrix);
     }
 
   }

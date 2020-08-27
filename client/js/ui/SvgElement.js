@@ -37,7 +37,7 @@ class SvgElement {
     }
     var dragEnd = function(e) {
       if (self.onDragEndCallback && this.moved) {
-        self.onDragEndCallback(self, this.transform(), e);
+        self.onDragEndCallback(this.transform(), self, e);
       }
     }
     group.drag(dragMove, dragStart, dragEnd);

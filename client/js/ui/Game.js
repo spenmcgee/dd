@@ -70,9 +70,9 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     this.messages.sendToServer(new MsgAsset(assetId, this.room, url, null, false));
   }
 
-  setupPieceDraggedEvent() {
-    this.board.onPieceDragged((svgPiece, transform) => {
-      var m = new Move(transform.localMatrix);
+  setupPieceDraggedEvent(svgPiece) {
+    svgPiece.onDragEnd(transform => {
+      var m = new MsgMove(transform.localMatrix);
       m.pieceType = svgPiece.pieceType;
       m.id = svgPiece.id;
       this.messages.sendToServer(m);
@@ -97,33 +97,37 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     })
   }
 
-  async mergePiece(piece) {
+  mergePiece(piece) {
     if (piece.pieceType == 'player')
-      await this.mergePlayer(piece);
+      this.mergePlayer(piece);
     else if (piece.pieceType == 'asset')
-      await this.mergeAsset(piece);
+      this.mergeAsset(piece);
   }
 
-  async mergePlayer(p) {
+  mergePlayer(p) {
     var player = null;
     if (p.id in this.svgPieces) {
       player = this.svgPieces[p.id];
     } else {
       player = new SvgPlayer(p, this.board, this.board.zpdGroup, this.config);
       this.svgPieces[p.id] = player;
+      this.setupPieceDraggedEvent(player);
     }
     player.set(p);
+    return player;
   }
 
-  async mergeAsset(a) {
+  mergeAsset(a) {
     var asset = null;
     if (a.id in this.svgPieces) {
       asset = this.svgPieces[a.id];
     } else {
       asset = new SvgAsset(a, this.board, this.board.zpdGroup, this.config);
       this.svgPieces[a.id] = asset;
+      this.setupPieceDraggedEvent(asset);
     }
     asset.set(a);
+    return asset;
   }
 
   async mergeGameState(data) {
@@ -138,7 +142,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     await this.board.draw(this.config.boardSvgUrl);
 
     this.setupGameStateEvent();
-    this.setupPieceDraggedEvent();
+    //this.setupPieceDraggedEvent();
 
     if (this.isDM) {
       await this.setupDM();
