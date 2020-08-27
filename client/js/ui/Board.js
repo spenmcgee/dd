@@ -1,5 +1,6 @@
 import { Player } from '/client/js/data/Player.js';
 import { SvgAsset } from '/client/js/ui/SvgAsset.js';
+import { SvgPlayer } from '/client/js/ui/SvgPlayer.js';
 
 class Board {
   constructor(user, room, svgSelector, config) {
@@ -17,7 +18,7 @@ class Board {
     return new Promise(r => Snap.load(url, data => r(data)));
   }
 
-  async draw(el, boardSvgUrl) {
+  async draw(boardSvgUrl) {
     var svgData = await this.loadSvg(boardSvgUrl);
     this.paper.append(svgData);
     this.paper.zpd({drag:false});
@@ -31,9 +32,8 @@ class Board {
     })
   }
 
-  onElementMoved(cb) {
-    this.onElementMovedCallback = cb;
-    console.log("setup", this.onElementMovedCallback)
+  onElementDragged(cb) {
+    this.onElementDraggedCallback = cb;
   }
 
   async redrawElement(el) {
@@ -45,10 +45,13 @@ class Board {
       var svgElement = null;
       if (el.elementType == 'asset')
         svgElement = new SvgAsset(el, this, this.zpdGroup, this.config);
+      else if (el.elementType == 'player')
+        svgElement = new SvgPlayer(el, this, this.zpdGroup, this.config);
       this.svgElements[id] = svgElement;
-      svgElement.onDragEnd(this.onElementMovedCallback);
+      svgElement.onDragEnd(this.onElementDraggedCallback);
     }
     svgElement.draw(el);
+    return svgElement;
   }
 
 }

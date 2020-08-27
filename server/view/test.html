@@ -5,25 +5,56 @@
 <script type="text/javascript" src="lib/snap.svg.zpd/snap.svg.zpd.js"></script>
 <script type="module">
   import { Board } from '/client/js/ui/Board.js';
-  import snapPlugin from '/client/js/ui/snap.plugin.js';
+  import { SvgAsset } from '/client/js/ui/SvgAsset.js';
   document.addEventListener("DOMContentLoaded", function(event) {
     start();
   });
   async function loadSvg(url) {
     return new Promise(r => Snap.load(url, data => r(data)));
   }
-  var t1 = 's 0.13432014772155568';
   async function start() {
-    snapPlugin.setup();
     var paper = Snap("#board");
-    //var svgData = await loadSvg('/asset/fartlips-goblin.svg');
-    var board = new Board('DM', 'fartlips', '#board');
-    board.config = {assetSize:60}
-    console.log("drawAsset")
-    await board.drawAsset({id:'a1',url:'/asset/fartlips-mime.svg'})
-    var el = board.id2ElementTable['a1'];
-    console.log("drawKillMark", el, el.transform())
-    board.drawKillMark(el);
+    var svgData = await loadSvg('/asset/fartlips-Mentaghast1.svg');
+    paper.append(svgData);
+    paper.zpd({drag:false});
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
+    var config = {assetSize:90};
+
+    var svgData = await loadSvg('/asset/fartlips-mime.svg');
+    //var el = paper.rect(0,0,200,300).attr({fill:'red', opacity:0.4});
+    //paper.add(svgData);
+    var group = paper.group();
+    group.add(svgData);
+    zpdGroup.add(group);
+
+    var bb = group.getBBox();
+    var scale = 40/Math.max(bb.width, bb.height);
+    // //console.log("bb", bb, scale, bb.width*scale, bb.height*scale);
+    //group.attr({width:bb.width*scale,height:bb.height*scale});
+    group.transform(`s ${scale}`);
+    //this.zpdGroup.add(this.el);
+
+    setupDraggable(group);
+  }
+
+  function setupDraggable(group) {
+    eve.on("snap.drag.start", function(x, y, e) { //a snapsvg global thing i guess
+      console.log("snap.drag.start", e)
+      e.stopPropagation();
+    });
+    console.log("here setupDraggable", group)
+    var dragStart = function (x, y, ev) {
+      this.data('origTransform', this.transform().local);
+      this.moved = false;
+    }
+    var dragMove = function(dx, dy, ev, x, y) {
+      this.moved = true;
+      var zoomPan = this.paper.zpd('save');
+      this.attr({
+        transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx / zoomPan.a, dy / zoomPan.a]
+      });
+    }
+    group.drag(dragMove, dragStart);
   }
 </script>
 </head>

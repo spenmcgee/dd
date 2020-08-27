@@ -13,7 +13,6 @@ import { Player } from '/client/js/data/Player.js';
 import { Asset } from '/client/js/data/Asset.js';
 import { Kill } from '/client/js/data/Kill.js';
 import { NameGenerator } from '/client/js/biz/NameGenerator.js';
-import snapPlugin from '/client/js/ui/snap.plugin.js';
 
 class Game {
 
@@ -50,8 +49,10 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     var moveControls = new MoveControls();
     menuEl.append(moveControls.el);
     moveControls.onMove(direction => {
-      var player = this.elements[this.id];
-      var localMatrix = this.board.movePlayer(player, direction);
+      //var player = this.elements[this.id];
+      var player = this.board.svgElements[this.id];
+      console.log("here is player", this.id, player)
+      var localMatrix = player.move(player, direction);
       var d = new Move(localMatrix);
       this.messages.sendToServer(d);
     })
@@ -69,9 +70,8 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     this.messages.sendToServer(new Asset(assetId, this.room, url, null, false));
   }
 
-  setupElementMovedEvent() {
-    this.board.onElementMoved((svgElement, transform) => {
-      //var localMatrix = el.transform().localMatrix
+  setupElementDraggedEvent() {
+    this.board.onElementDragged((svgElement, transform) => {
       var m = new Move(transform.localMatrix);
       m.elementType = svgElement.elementType;
       m.id = svgElement.id;
@@ -132,10 +132,10 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
   async setup() {
     this.config = await this.getConfig(this.room);
     this.board = new Board(this.user, this.room, "#board", this.config);
-    await this.board.draw(document.getElementById("main"), this.config.boardSvgUrl);
+    await this.board.draw(this.config.boardSvgUrl);
 
     this.setupGameStateEvent();
-    this.setupElementMovedEvent();
+    this.setupElementDraggedEvent();
 
     if (this.isDM) {
       await this.setupDM();

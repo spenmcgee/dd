@@ -15,30 +15,36 @@ class SvgAsset extends SvgElement {
     var assetSize = this.config && this.config.assetSize || 40;
     if (this.init) {
       this.init = false;
-      var el = this.paper.svg();
-      var group = this.paper.group(el);
-      group.attr({width:assetSize, height:assetSize, id:this.id})
-      group.elementType = 'asset';
-      group.id = this.id;
+      var group = this.el = this.paper.group();
       var svgData = await this.loadSvg(this.url);
-      el.add(svgData);
+      group.add(svgData);
+      this.zpdGroup.add(group);
+
       var bb = group.getBBox();
       var scale = assetSize/Math.max(bb.width, bb.height);
-      el.attr({width:bb.width,height:bb.height});
-      group.transform(`s ${scale}`);
+      this.el.transform(`s${scale}`);
+
       if (this.isDM) {
-        this.setupDraggable(group);
-        //this.setupKillable(group);
+        this.setupDraggable(this.el);
       }
-      this.zpdGroup.add(group);
-      this.el = group;
+      // if (asset.killed) {
+        //this.drawKillMark(this.el);
+      // }
     } else {
       //translate and maybe scale
     }
-    // if (asset.killed) {
-    //   this.drawKillMark(group);
-    // }
 
+  }
+
+  drawKillMark(element) {
+    console.log("here")
+    var bb = element.getBBox();
+    var lm = element.transform().localMatrix;
+    var w = bb.width/lm.a, h = bb.height/lm.a;
+    //var p = this.paper.path(`m 0 0 l ${w} ${h} m -${w} 0 l ${w} -${h}`)
+    // .attr({id:'killSymbol', stroke:'red', strokeWidth:20, opacity:0.4});
+    var p = this.paper.rect(0, 0, w, h).attr({fill:'red', opacity:0.4})
+    element.add(p);
   }
 
 }
