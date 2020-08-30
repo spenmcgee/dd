@@ -51,25 +51,27 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     dmControls.onAddAsset(async url => {
       var assetId = NameGenerator.generate();
       this.addAsset(url, assetId);
-    })
-    // this.maskControls.onApply(() => this.board.redrawLayers(this.maskControls));
-    // this.maskControls.onMask(rects => {
-    //   this.board.redrawLayers(this.maskControls);
-    //   messages.sendToServer(new Mask(rects));
-    // })
+    });
+    this.maskControls.onApply(() => this.draw());
+    this.maskControls.onMask(rects => {
+      //this.board.redrawLayers(this.maskControls);
+      //this.maskControls.draw();
+      //this.draw();
+      this.messages.sendToServer(new MsgMask(rects));
+    });
     // this.board.onKill((id, el) => {
     //   messages.sendToServer(new Kill(id));
     //   messages.sendToServer(new Text(`${id} has been defeated`));
-    // })
+    // });
 
     controlsEl.append(dmControls.el);
     controlsEl.append(this.maskControls.el);
   }
 
   async setupPlayer() {
-    var menuEl = document.getElementById("menu");
+    var controlsEl = document.getElementById("controls");
     var moveControls = new MoveControls();
-    menuEl.append(moveControls.el);
+    controlsEl.append(moveControls.el);
     moveControls.onMove(direction => {
       var player = this.svgPieces[this.id];
       var localMatrix = player.move(player, direction);
@@ -104,7 +106,8 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
       match: data => data.meta == 'game-state',
       handler: async data => {
         await this.mergeGameState(data);
-        this.redrawPieces(this.svgPieces);
+        //this.redrawPieces(this.svgPieces);
+        this.draw();
       }
     })
   }
@@ -118,10 +121,43 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     })
   }
 
-  redrawPieces(svgPieces) {
-    Object.values(svgPieces).forEach(svgPiece => {
-      svgPiece.draw();
+  setupMaskEvent() {
+    this.wsClient.addMessageHandler({
+      match: data => data.meta == 'mask',
+      handler: data => {
+        this.maskControls.setRects(data.rects);
+        this.draw();
+      }
     })
+  }
+
+  // redrawPieces(svgPieces) {
+  //   Object.values(svgPieces).forEach(svgPiece => {
+  //     svgPiece.draw();
+  //   })
+  // }
+
+  draw() { //ensures proper layering
+    console.log('Game.draw');
+    var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
+    if (this.isDM)
+      this.maskControls.draw();
+    for (var svgPiece of Object.values(this.svgPieces)) {
+      if (svgPiece instanceof SvgAsset) {
+        svgPiece.draw();
+        console.log('Game.draw1');
+        zpdGroup.add(svgPiece.el);
+      }
+    }
+    if (!this.isDM)
+      this.maskControls.draw();
+    for (var svgPiece of Object.values(this.svgPieces)) {
+      if (svgPiece instanceof SvgPlayer) {
+        svgPiece.draw();
+        console.log('Game.draw2');
+        zpdGroup.add(svgPiece.el);
+      }
+    }
   }
 
   mergePiece(piece) {
@@ -171,6 +207,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     this.setupGameStateEvent();
     this.setupTextEvent();
     this.maskControls = new MaskControls(this.board);
+    this.setupMaskEvent();
 
     if (this.isDM) {
       await this.setupDM();
