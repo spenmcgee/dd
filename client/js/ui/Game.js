@@ -56,7 +56,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     this.maskControls.onMask(rects => {
       //this.board.redrawLayers(this.maskControls);
       //this.maskControls.draw();
-      //this.draw();
+      //await this.draw()
       this.messages.sendToServer(new MsgMask(rects));
     });
     // this.board.onKill((id, el) => {
@@ -106,8 +106,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
       match: data => data.meta == 'game-state',
       handler: async data => {
         await this.mergeGameState(data);
-        //this.redrawPieces(this.svgPieces);
-        this.draw();
+        await this.draw();
       }
     })
   }
@@ -124,28 +123,20 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
   setupMaskEvent() {
     this.wsClient.addMessageHandler({
       match: data => data.meta == 'mask',
-      handler: data => {
+      handler: async data => {
         this.maskControls.setRects(data.rects);
-        this.draw();
+        await this.draw();
       }
     })
   }
 
-  // redrawPieces(svgPieces) {
-  //   Object.values(svgPieces).forEach(svgPiece => {
-  //     svgPiece.draw();
-  //   })
-  // }
-
-  draw() { //ensures proper layering
-    console.log('Game.draw');
-    var zpdGroup = Snap.select('#snapsvg-zpd-'+this.board.paper.id);
+  async draw() { //ensures proper layering
+    var zpdGroup = this.board.zpdGroup;
     if (this.isDM)
       this.maskControls.draw();
     for (var svgPiece of Object.values(this.svgPieces)) {
       if (svgPiece instanceof SvgAsset) {
-        svgPiece.draw();
-        console.log('Game.draw1');
+        await svgPiece.draw();
         zpdGroup.add(svgPiece.el);
       }
     }
@@ -153,8 +144,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
       this.maskControls.draw();
     for (var svgPiece of Object.values(this.svgPieces)) {
       if (svgPiece instanceof SvgPlayer) {
-        svgPiece.draw();
-        console.log('Game.draw2');
+        await svgPiece.draw();
         zpdGroup.add(svgPiece.el);
       }
     }

@@ -107,36 +107,31 @@ class MaskControls {
     if (this.mask) this.mask.remove();
     this.rects = [];
     var paper = this.board.paper;
-    var zpdGroup = Snap.select('#snapsvg-zpd-'+paper.id);
+    var zpdGroup = this.board.zpdGroup;
     rects.forEach(r => {
       var color = r[4] ? 'white' : 'black';
-      var rect = paper.rect(r[0],r[1],r[2],r[3]).attr({fill:color, opacity:1});
+      var rect = paper.rect(r[0],r[1],r[2],r[3]).attr({fill:color});
       zpdGroup.add(rect);
       this.rects.push(rect);
     })
     this.mask = paper.g(...this.rects);
-    this.draw();
+    zpdGroup.add(this.mask);
+    //this.draw();
   }
 
   draw() {
-    console.log('MaskControls.draw', this.isDM, this.mode);
     if (this.isDM) {
       if (this.mode != 'apply') {
-        console.log('MaskControls.draw DONE1');
         this.drawMaskPositive();
         return
       }
     }
-    console.log('MaskControls.draw DONE2');
     this.drawMaskNegative();
   }
 
-  removeMaskPositiveElements() {
+  removeMaskElements() {
     if (this.maskPositive)
       this.maskPositive.remove();
-  }
-
-  removeMaskNegativeElements() {
     if (this.maskNegative) {
       this.universe.remove();
       this.maskPositiveBlack.remove();
@@ -147,25 +142,27 @@ class MaskControls {
 
   drawMaskNegative() {
     if (!this.mask) return;
-    this.removeMaskPositiveElements();
+    this.removeMaskElements();
     var zpdGroup = this.board.zpdGroup;
     var zpdCoordSpaceMatrix = Snap.matrix(this.board.paper.zpd('save'));
     var inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
     var bbUniverse = this.board.paper.getBBox();
     this.universe = this.board.paper.rect(bbUniverse).attr({fill:'white'});
     this.universe.transform(inverseCoordSpaceMatrix.toTransformString());
+    zpdGroup.add(this.universe);
 
     var bbMask = this.mask.getBBox();
-    this.maskPositiveBlack = this.board.paper.rect(bbMask)
-      .attr({mask:this.mask, fill:'black', opacity:1});
+    this.maskPositiveBlack = this.board.paper.rect(bbMask).attr({mask:this.mask, fill:'black'})
+    zpdGroup.add(this.maskPositiveBlack);
     this.applyMask = this.board.paper.g(this.universe, this.maskPositiveBlack);
+    zpdGroup.add(this.applyMask);
     this.maskNegative = this.board.paper.rect(this.universe.getBBox()).attr({mask:this.applyMask});
-    this.zpdGroup.add(this.maskNegative);
+    zpdGroup.add(this.maskNegative);
   }
 
   drawMaskPositive() {
     if (!this.mask) return;
-    this.removeMaskNegativeElements();
+    this.removeMaskElements();
     var bb = this.mask.getBBox();
     this.maskPositive = this.board.paper.rect(bb)
       .attr({mask:this.mask, fill:'yellow', opacity:0.3});
@@ -201,6 +198,7 @@ class MaskControls {
       rect.remove();
       if (self.mask) self.mask.remove();
       self.mask = paper.g(...self.rects);
+      self.mask.remove()
 
       //self.draw();
       self.newMaskCallback(self.rects);

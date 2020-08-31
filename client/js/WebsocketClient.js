@@ -1,6 +1,7 @@
 import { Cookie } from './Cookie.js';
 import { Text } from './message/Text.js';
 import { Join } from './message/Join.js';
+//import Semaphore from '/lib/semaphore-async-await/dist/Semaphore.js';
 
 class WebsocketClient {
 
@@ -27,17 +28,17 @@ class WebsocketClient {
     var id = this.id, room = this.root, user = this.user;
     var socket = new WebSocket(`ws://${location.hostname}:3001`);
     this.socket = socket;
-    socket.onmessage = e => {
+    socket.onmessage = async e => {
       let data = JSON.parse(e.data);
       console.log(`(WebsocketClient#socket.onmessage) incoming ${data.meta}`, data);
-      this.messageHandlers.map(mh => {
+      for (var mh of this.messageHandlers) {
         if (mh.match(data)) {
           if (typeof(mh.handler) == 'object')
-            mh.handler.handle(data);
+            await mh.handler.handle(data);
           else
-            mh.handler(data);
+            await mh.handler(data);
         }
-      })
+      }
     }
     socket.onopen = e => {
       this.onOpenHandler(e);
