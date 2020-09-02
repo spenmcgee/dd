@@ -124,6 +124,10 @@ class MaskControls {
     this.rects.forEach(r => r.remove());
     if (this.mask) this.mask.remove();
     this.rects = [];
+    if (rects.length == 0) {
+      this.mask = null;
+      return;
+    }
     var paper = this.board.paper;
     var zpdGroup = this.board.zpdGroup;
     rects.forEach(r => {
@@ -158,8 +162,8 @@ class MaskControls {
   }
 
   drawMaskNegative() {
-    if (!this.mask) return;
     this.removeMaskElements();
+    if (!this.mask) return;
     var zpdGroup = this.board.zpdGroup;
     var zpdCoordSpaceMatrix = Snap.matrix(this.board.paper.zpd('save'));
     var inverseCoordSpaceMatrix = zpdCoordSpaceMatrix.invert();
@@ -178,8 +182,8 @@ class MaskControls {
   }
 
   drawMaskPositive() {
-    if (!this.mask) return;
     this.removeMaskElements();
+    if (!this.mask) return;
     var bb = this.mask.getBBox();
     this.maskPositive = this.board.paper.rect(bb)
       .attr({mask:this.mask, fill:'yellow', opacity:0.3});
