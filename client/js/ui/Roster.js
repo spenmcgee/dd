@@ -16,8 +16,8 @@ class Roster {
   }
 
   mergeGameState(data) {
-    data.elements.forEach(e => {
-      if (e.elementType == 'player') {
+    Object.values(data.pieces).forEach(e => {
+      if (e.pieceType == 'player') {
         this.add(e);
       }
     })

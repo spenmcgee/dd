@@ -107,6 +107,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
       handler: async data => {
         await this.mergeGameState(data);
         await this.draw();
+        await this.roster.mergeGameState(data);
       }
     })
   }
@@ -210,6 +211,10 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
       document.getElementById('messages'),
       this.wsClient
     );
+
+    this.roster = new Roster();
+    var rosterEl = document.getElementById("roster");
+    rosterEl.append(this.roster.el);
 
   }
 
