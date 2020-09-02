@@ -196,7 +196,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
 
     this.setupGameStateEvent();
     this.setupTextEvent();
-    this.maskControls = new MaskControls(this.board);
+    this.maskControls = new MaskControls(this.board, document.getElementById("submenu"));
     this.setupMaskEvent();
 
     if (this.isDM) {

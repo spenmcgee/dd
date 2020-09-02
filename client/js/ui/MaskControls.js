@@ -1,6 +1,6 @@
 class MaskControls {
 
-  constructor(board) {
+  constructor(board, submenuEl) {
     this.board = board;
     this.zpdGroup = board.zpdGroup;
     this.el = document.createElement('span');
@@ -12,16 +12,34 @@ class MaskControls {
     this.alwaysShowMaskNegative = !board.isDM;
     this.isDM = board.isDM;
 
+    var toggleMenuButton = document.createElement('button');
+    toggleMenuButton.append("Mask");
+    var buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'hidden';
+
     this.maskButton = document.createElement('button');
     this.maskButton.append("mask");
     this.unmaskButton = document.createElement('button');
     this.unmaskButton.append("unmask");
     this.applyButton = document.createElement('button');
     this.applyButton.append("apply");
+    this.clearButton = document.createElement('button');
+    this.clearButton.append("clear");
 
-    this.el.append(this.maskButton);
-    this.el.append(this.unmaskButton);
-    this.el.append(this.applyButton);
+    buttonsDiv.append(this.maskButton);
+    buttonsDiv.append(this.unmaskButton);
+    buttonsDiv.append(this.applyButton);
+    buttonsDiv.append(this.clearButton);
+    this.el.append(toggleMenuButton);
+    submenuEl.append(buttonsDiv);
+
+    toggleMenuButton.addEventListener('click', e => {
+      buttonsDiv.classList.toggle("hidden");
+    })
+
+    this.clearButton.addEventListener('click', e => {
+      this.newMaskCallback([]);
+    })
 
     this.wireupModes();
   }
@@ -102,7 +120,7 @@ class MaskControls {
   }
 
   setRects(rects) {
-    if ((!rects) || (rects.length == 0)) return;
+    if (!rects) rects = [];
     this.rects.forEach(r => r.remove());
     if (this.mask) this.mask.remove();
     this.rects = [];
@@ -116,7 +134,6 @@ class MaskControls {
     })
     this.mask = paper.g(...this.rects);
     zpdGroup.add(this.mask);
-    //this.draw();
   }
 
   draw() {

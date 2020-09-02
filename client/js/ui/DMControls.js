@@ -3,7 +3,7 @@ class DMControls {
   constructor(submenuEl) {
 
     var toggleButton = document.createElement('button');
-    toggleButton.append("+Asset");
+    toggleButton.append("Asset");
 
     var formDiv = document.createElement('div');
     var assetUrlInput = document.createElement('input');
