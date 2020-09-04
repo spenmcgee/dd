@@ -1,7 +1,7 @@
 import { SvgElement } from '/client/js/ui/SvgElement.js';
 
-const PLAYER_SIZE = 10;
-const MOVE_STEP_SIZE = 5;
+const PLAYER_SIZE = 20;
+const MOVE_STEP_SIZE = 15;
 
 class SvgPlayer extends SvgElement {
 

@@ -16,7 +16,7 @@ import { SvgPlayer } from '/client/js/ui/SvgPlayer.js';
 import { SvgAsset } from '/client/js/ui/SvgAsset.js';
 import { NameGenerator } from '/client/js/biz/NameGenerator.js';
 
-const DEFAULT_BOARD_URL = "_system-default.svg";
+const DEFAULT_BOARD_URL = "/asset/_system-default.svg";
 
 class Game {
 
