@@ -1,35 +1,29 @@
-<html>
-<head>
-  <title>DD</title>
-  <script type="text/javascript">
-    function setCookie(cname, cvalue) {
-      var d = new Date();
-      d.setTime(d.getTime() + (30*24*60*60*1000));
-      var expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-    document.addEventListener("DOMContentLoaded", function(event) {
-      document.getElementById("room-btn").addEventListener("click", function(e) {
-        var room = document.getElementById("room").value;
-        var user = document.getElementById("user").value;
-        var color = document.getElementById("color").value;
-        setCookie("room", room);
-        setCookie("user", user);
-        setCookie("color", color);
-        setCookie("id", `${user}@${room}`);
-        window.location.href = "/" + room;
-      })
-    });
-  </script>
-</head>
-<body>
+{% extends "layout-public.html" %}
 
+{% block head %}
+<style>
+#main {
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  -moz-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+}
+</style>
+{% endblock %}
+
+{% block main %}
 <div id="main">
-  room: <input type="text" name="room" id="room" value="{{room}}">
-  username: <input type="text" name="user" id="user" value="{{user}}">
-  color: <input type="text" name="color" id="color" value="{{color}}">
-  <button id="room-btn">Load Room</button>
+  <form method='post'>
+    <table cellpadding="5" cellspacing="5">
+    <tr><td>Room</td><td><input type="text" name="room" id="room" value="{{room}}"> The more random the more secret</td></tr>
+    <tr><td>Username</td><td><input type="text" name="user" id="user" value="{{user}}"> Use "DM" if you're the DM</td></tr>
+    <tr><td>Color</td><td><input type="text" name="color" id="color" value="{{color}}"> A unique color to identify your piece</td></tr>
+    <tr><td>Email</td><td><input type="text" name="email" id="email" value="{{email}}"> For game-related communications</td></tr>
+    <tr><td><button id="room-btn">Load Room</button></td></tr>
+    </table>
+  </form>
 </div>
 
-</body>
-</html>
+{% endblock %}

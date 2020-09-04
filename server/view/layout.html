@@ -3,22 +3,46 @@
 <title>DD</title>
 
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-  }
-  #menu {
-    background-color: cyan;
-    padding: 10px;
-    z-index: 1;
-    width: 100%;
-  }
-  #menu a {
-    text-decoration: none;
-  }
-  #main {
-    padding: 30px;
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+}
+#menu {
+  background-color: cyan;
+  padding: 10px;
+  z-index: 1;
+  width: 100%;
+}
+#menu a {
+  text-decoration: none;
+}
+#main {
+  padding: 30px;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #ddd;
+  color: black;
+  text-align: center;
+  padding: 10px;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+code {
+  display: block;
+  white-space: pre-wrap;
+  color: darkred;
+}
 </style>
 
 {% block head %}

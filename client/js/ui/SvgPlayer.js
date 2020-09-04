@@ -1,12 +1,15 @@
 import { SvgElement } from '/client/js/ui/SvgElement.js';
 
-const PIECE_SIZE = 5;
+const PLAYER_SIZE = 10;
+const MOVE_STEP_SIZE = 5;
 
 class SvgPlayer extends SvgElement {
 
   constructor(elData, board, zpdGroup, config) {
     super(elData, board, zpdGroup, config);
     this.color = elData.color;
+    this.playerSize = config.playerSize || PLAYER_SIZE;
+    this.moveStepSize = config.moveStepSize || MOVE_STEP_SIZE;
   }
 
   set(elData) {
@@ -18,7 +21,7 @@ class SvgPlayer extends SvgElement {
   }
 
   move(p, direction) {
-    var x = direction[2]*-PIECE_SIZE||direction[3]*PIECE_SIZE, y = direction[0]*-PIECE_SIZE||direction[1]*PIECE_SIZE;
+    var x = direction[2]*-this.moveStepSize||direction[3]*this.moveStepSize, y = direction[0]*-this.moveStepSize||direction[1]*this.moveStepSize;
     var m = this.el.transform().localMatrix;
     m.translate(x, y);
     this.el.transform(m);
@@ -28,7 +31,7 @@ class SvgPlayer extends SvgElement {
   async draw() {
     if (this.init) {
       this.init = false;
-      var circ = this.paper.circle(100, 100, 10);
+      var circ = this.paper.circle(100, 100, this.playerSize);
       circ.attr('fill', this.color);
       var group = this.paper.group(circ);
       if (this.isDM) {

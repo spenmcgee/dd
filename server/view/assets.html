@@ -49,17 +49,25 @@ function copyTextToClipboard(text) {
 <h1>Assets</h1>
 <h2>Add Asset</h2>
 <form method="post" action="/{{room}}/asset" enctype="multipart/form-data">
-  <input type="file" name="assetFile"> <input type="submit" value="Add Asset">
+  <input type="file" name="assetFile">
+  <div class="tooltip">Share?
+    <span class="tooltiptext">Share with all rooms or only this room (please share!)</span>
+  </div> <input type="checkbox" name="shared" checked>
+  <input type="submit" value="Add Asset">
 </form>
 
 <h2>Asset List</h2>
 <table>
 {% for asset in assets %}
   <tr>
-    <td><img src="/asset/{{asset}}" alt="{{asset}}" width="100" height="100"></td>
-    <td><a href="/asset/{{asset}}" alt="{{asset}}">{{asset}}</a></td>
-    <td><a href="/asset/{{asset}}/delete" alt="{{asset}}">delete</a></td>
-    <td><button onclick="copyTextToClipboard('/asset/{{asset}}');">copy path</button></td>
+    <td><img src="/asset/{{asset.filename}}" alt="{{asset}}" width="100" height="100"></td>
+    <td><a href="/asset/{{asset.filename}}" alt="{{asset}}">{{asset.filename}}</a></td>
+    {% if asset.deletable %}
+      <td><a href="/asset/{{asset.filename}}/delete" alt="{{asset}}">delete</a></td>
+    {% else %}
+      <td></td>
+    {% endif %}
+    <td><button onclick="copyTextToClipboard('/asset/{{asset.filename}}');">copy path</button></td>
   </tr>
 {% endfor %}
 </table>

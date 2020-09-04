@@ -21,7 +21,9 @@ class AssetLoader {
             if (filename == '.DS_Store') return;
             if (filename == `${room}-config.json`) return;
             if (filename.substr(0, room.length) == room)
-              assets.push(filename);
+              assets.push({filename:filename, deletable:true});
+            if (filename.substr(0, 7) == '_shared')
+              assets.push({filename:filename, deletable:false});
           });
           resolve(assets);
         }

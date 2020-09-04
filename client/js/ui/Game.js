@@ -16,6 +16,8 @@ import { SvgPlayer } from '/client/js/ui/SvgPlayer.js';
 import { SvgAsset } from '/client/js/ui/SvgAsset.js';
 import { NameGenerator } from '/client/js/biz/NameGenerator.js';
 
+const DEFAULT_BOARD_URL = "_system-default.svg";
+
 class Game {
 
   constructor(id, user, room, color, wsClient) {
@@ -42,7 +44,6 @@ class Game {
     this.wsClient.onOpen(e => {
       this.messages.sendToServer(new MsgJoin());
       this.messages.sendToServer(new MsgText("joining room"));
-this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     })
     var submenuEl = document.getElementById("submenu");
     var menuEl = document.getElementById("menu");
@@ -54,9 +55,6 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
     });
     this.maskControls.onApply(() => this.draw());
     this.maskControls.onMask(rects => {
-      //this.board.redrawLayers(this.maskControls);
-      //this.maskControls.draw();
-      //await this.draw()
       this.messages.sendToServer(new MsgMask(rects));
     });
     // this.board.onKill((id, el) => {
@@ -193,7 +191,7 @@ this.addAsset('/asset/fartlips-mime.svg', "zipdoo");
   async setup() {
     this.config = await this.getConfig(this.room);
     this.board = new Board(this.user, this.room, "#board", this.config);
-    await this.board.draw(this.config.boardSvgUrl);
+    await this.board.draw(this.config.boardSvgUrl||DEFAULT_BOARD_URL);
 
     this.setupGameStateEvent();
     this.setupTextEvent();

@@ -11,8 +11,26 @@ router.get('/', (req, res) => {
   var room = req.cookies["room"];
   var user = req.cookies["user"];
   var color = req.cookies["color"];
+  var email = req.cookies["email"];
   var isDM = user=='DM';
-  res.render("home.html", {room:room, user:user, color:color, isDM:isDM});
+  res.render("home.html", {room:room, user:user, color:color, isDM:isDM, email:email});
+});
+
+router.post('/', (req, res) => {
+  var room = req.body["room"];
+  var user = req.body["user"];
+  var color = req.body["color"];
+  var email = req.body["email"];
+  var userid = `${user}@${room}`;
+  console.log(`ROOM-ENTER ${userid} ${email}`);
+  var isDM = user=='DM';
+  var cookieOptions = { maxAge: 60*60*24*30*1000 };
+  res.cookie("room", room, cookieOptions);
+  res.cookie("user", user, cookieOptions);
+  res.cookie("color", color, cookieOptions);
+  res.cookie("id", userid, cookieOptions);
+  res.cookie("email", email, cookieOptions);
+  res.redirect(`/${room}`);
 });
 
 router.get('/test', (req, res) => {
@@ -82,8 +100,9 @@ router.post('/:room/asset', async function (req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
+  let shared = ('shared' in req.body && req.body.shared == 'on') ? true : false;
   let assetFile = req.files.assetFile;
-  let filename = `${room}-${assetFile.name}`;
+  let filename = `${shared?'_shared':room}-${assetFile.name}`;
   var destFilepath = path.join(DATA_ROOT, filename);
   assetFile.mv(destFilepath, function(err) {
     if (err)

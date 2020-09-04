@@ -3,8 +3,23 @@
 {% block main %}
 
 <h1>Config</h1>
-<form method="post">
-  <textarea name="boardJson" rows="20" cols="80">{{boardJson}}</textarea>
+
+<div class="" style="background-color:#eee; padding: 20px; float:right; width:45%">
+  This is an example of how you configure the game and also shows all the options available.
+  <a target="_blank" href="https://ddonline.co/2020/09/02/how-to-edit-the-game-config/">You can read more about the options here.</a>
+  <code>
+    {
+      "boardSvgUrl": "/asset/_shared-Ghestpell.svg",
+      "startPoint": [100,100],
+      "assetSize": 60,
+      "playerSize": 10,
+      "moveStepSize": 5
+    }
+  </code>
+</div>
+
+<form method="post" style="width:45%;">
+  <textarea name="boardJson" rows="20" style="width:100%">{{boardJson}}</textarea>
   <p>
     <button type="submit" id="config-save">Save</button>
   </p>

@@ -15,8 +15,9 @@ class BoardLoader {
     try {
       var boardJson = fs.readFileSync(filepath);
       board = JSON.parse(boardJson)
-    } catch {
+    } catch (err) {
       //noop
+      console.log(`(BoardLoader) Bad json in room ${room}`, err);
     }
     return board;
   }
