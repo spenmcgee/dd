@@ -1,5 +1,7 @@
 import { SvgElement } from '/client/js/ui/SvgElement.js';
 
+const ASSET_SIZE = 100;
+
 class SvgAsset extends SvgElement {
 
   constructor(elData, board, zpdGroup, config) {
@@ -22,7 +24,7 @@ class SvgAsset extends SvgElement {
   }
 
   async draw() {
-    var assetSize = this.config && this.config.assetSize || 40;
+    var assetSize = this.config && this.config.assetSize || ASSET_SIZE;
     if (this.init) {
       this.init = false;
       var group = this.el = this.paper.group();
