@@ -9,8 +9,8 @@ class MaskControls {
     this.mask = null;
     this.maskPositive = null;
     this.maskNegative = null;
-    this.alwaysShowMaskNegative = !board.isDM;
-    this.isDM = board.isDM;
+    this.alwaysShowMaskNegative = !board.isGM;
+    this.isGM = board.isGM;
 
     var toggleMenuButton = document.createElement('button');
     toggleMenuButton.append("Mask");
@@ -44,23 +44,6 @@ class MaskControls {
     this.wireupModes();
   }
 
-  toggleMode(mode, prevMode) {
-    if (mode == prevMode) this.mode = 'none';
-    else this.mode = mode;
-    this.setupMode(this.mode, prevMode);
-  }
-
-  setupMode(mode, prevMode) {
-    this.setupPointer(mode);
-    if ((prevMode == 'none') && (mode != 'none')) { //masking, board still
-      this.setupDrag();
-      this.boardStill();
-    }
-    else if ((prevMode != 'none') && (mode == 'none')) { //not masking, board moving
-      this.boardMoving();
-    }
-  }
-
   wireupModes() {
     this.maskButton.addEventListener('click', e => {
       this.toggleMode('mask', this.mode);
@@ -77,6 +60,12 @@ class MaskControls {
     })
   }
 
+  toggleMode(mode, prevMode) {
+    if (mode == prevMode) this.mode = 'none';
+    else this.mode = mode;
+    this.setupMode(this.mode, prevMode);
+  }
+
   toggleButton(btn, mode) {
     this.maskButton.classList.remove('enabled');
     this.unmaskButton.classList.remove('enabled');
@@ -85,21 +74,33 @@ class MaskControls {
       btn.classList.add('enabled');
   }
 
+  setupMode(mode, prevMode) {
+    this.setupPointer(mode);
+    if ((mode == 'mask') || (mode == 'unmask')) { //masking, board still
+      this.setupDrag();
+      this.boardStill(mode, prevMode);
+    } else { //not masking, board moving
+      this.boardMoving(mode, prevMode);
+    }
+  }
+
   setupPointer(mode) {
-    if (mode != 'none') {
+    if ((mode == 'mask') || (mode == 'unmask')) {
       document.getElementById('board').style.cursor = 'crosshair';
     } else {
       document.getElementById('board').style.cursor = 'auto';
     }
   }
 
-  boardMoving() {
+  boardMoving(mode, prevMode) {
     this.board.paper.undrag();
-    this.board.paper.zpd('toggle');
+    if ((prevMode == 'mask') || (prevMode == 'unmask')) //previously, we were masking so the board was still, so now we can toggle
+      this.board.paper.zpd('toggle');
   }
 
-  boardStill() {
-    this.board.paper.zpd('toggle');
+  boardStill(mode, prevMode) {
+    if ((prevMode != 'mask') && (prevMode != 'unmask')) //prevent toggling when the OTHER mask mode is clicked
+      this.board.paper.zpd('toggle');
   }
 
   onMask(newMaskCallback) {
@@ -141,7 +142,7 @@ class MaskControls {
   }
 
   draw() {
-    if (this.isDM) {
+    if (this.isGM) {
       if (this.mode != 'apply') {
         this.drawMaskPositive();
         return

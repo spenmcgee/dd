@@ -34,7 +34,7 @@ class SvgPlayer extends SvgElement {
       var circ = this.paper.circle(100, 100, this.playerSize);
       circ.attr('fill', this.color);
       var group = this.paper.group(circ);
-      if (this.isDM) {
+      if (this.isGM) {
         this.setupDraggable(group);
       }
       this.el = group;

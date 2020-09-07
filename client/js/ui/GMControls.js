@@ -1,4 +1,4 @@
-class DMControls {
+class GMControls {
 
   constructor(submenuEl) {
 
@@ -41,4 +41,4 @@ class DMControls {
 
 }
 
-export { DMControls }
+export { GMControls }

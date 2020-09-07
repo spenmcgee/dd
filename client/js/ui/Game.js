@@ -3,7 +3,7 @@ import { Chat } from '/client/js/ui/Chat.js';
 import { MoveControls } from '/client/js/ui/MoveControls.js';
 import { Roster } from '/client/js/ui/Roster.js';
 import { MaskControls } from '/client/js/ui/MaskControls.js';
-import { DMControls } from '/client/js/ui/DMControls.js';
+import { GMControls } from '/client/js/ui/GMControls.js';
 import { Messages } from '/client/js/biz/Messages.js';
 import { Join as MsgJoin } from '/client/js/message/Join.js';
 import { Text as MsgText } from '/client/js/message/Text.js';
@@ -27,7 +27,7 @@ class Game {
     this.room = room;
     this.color = color;
     this.svgPieces = {};
-    this.isDM = user=='DM';
+    this.isGM = user=='GM';
     this.wsClient = wsClient;
     this.messages = new Messages(wsClient);
   }
@@ -40,7 +40,7 @@ class Game {
     return json;
   }
 
-  async setupDM() {
+  async setupGM() {
     this.wsClient.onOpen(e => {
       this.messages.sendToServer(new MsgJoin());
       this.messages.sendToServer(new MsgText("joining room"));
@@ -48,8 +48,8 @@ class Game {
     var submenuEl = document.getElementById("submenu");
     var menuEl = document.getElementById("menu");
     var controlsEl = document.getElementById("controls");
-    var dmControls = new DMControls(submenuEl);
-    dmControls.onAddAsset(async url => {
+    var gmcontrols = new GMControls(submenuEl);
+    gmcontrols.onAddAsset(async url => {
       var assetId = NameGenerator.generate();
       this.addAsset(url, assetId);
     });
@@ -62,7 +62,7 @@ class Game {
     //   messages.sendToServer(new Text(`${id} has been defeated`));
     // });
 
-    controlsEl.append(dmControls.el);
+    controlsEl.append(gmcontrols.el);
     controlsEl.append(this.maskControls.el);
   }
 
@@ -131,16 +131,13 @@ class Game {
 
   async draw() { //ensures proper layering
     var zpdGroup = this.board.zpdGroup;
-    if (this.isDM)
-      this.maskControls.draw();
     for (var svgPiece of Object.values(this.svgPieces)) {
       if (svgPiece instanceof SvgAsset) {
         await svgPiece.draw();
         zpdGroup.add(svgPiece.el);
       }
     }
-    if (!this.isDM)
-      this.maskControls.draw();
+    this.maskControls.draw();
     for (var svgPiece of Object.values(this.svgPieces)) {
       if (svgPiece instanceof SvgPlayer) {
         await svgPiece.draw();
@@ -198,8 +195,8 @@ class Game {
     this.maskControls = new MaskControls(this.board, document.getElementById("submenu"));
     this.setupMaskEvent();
 
-    if (this.isDM) {
-      await this.setupDM();
+    if (this.isGM) {
+      await this.setupGM();
     } else {
       await this.setupPlayer();
     }

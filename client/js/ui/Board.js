@@ -4,7 +4,7 @@ class Board {
     this.config = config || {};
     this.user = user;
     this.room = room;
-    this.isDM = user=='DM';
+    this.isGM = user=='GM';
     this.svgSelector = svgSelector;
     this.paper = Snap(this.svgSelector);
     this.zpdGroup = null;

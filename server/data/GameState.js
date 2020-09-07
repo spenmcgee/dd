@@ -24,7 +24,7 @@ class GameState {
       this.pieces[el.id] = el;
   }
 
-  addDM(data) {
+  addGM(data) {
     //noop
   }
 

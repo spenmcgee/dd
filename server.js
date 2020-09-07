@@ -32,8 +32,8 @@ var gm = new GamesManager();
 router.post('/:room/reset', (req, res) => {
   var room = req.params.room;
   var user = req.cookies["user"];
-  var isDM = user=='DM';
-  if (isDM) {
+  var isGM = user=='GM';
+  if (isGM) {
     gm.deleteGame(room);
   }
   res.redirect('/');

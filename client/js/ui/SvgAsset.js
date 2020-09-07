@@ -36,7 +36,7 @@ class SvgAsset extends SvgElement {
       var scale = assetSize/Math.max(bb.width, bb.height);
       this.el.transform(`s${scale}`);
 
-      if (this.isDM) {
+      if (this.isGM) {
         this.setupDraggable(this.el);
       }
       // if (asset.killed) {

@@ -8,7 +8,7 @@ class SvgElement {
     this.init = true;
     this.el = null;
     this.zpdGroup = zpdGroup;
-    this.isDM = board.isDM;
+    this.isGM = board.isGM;
     this.elementType = elData.elementType;
     this.user = elData.user;
     this.room = elData.room;
