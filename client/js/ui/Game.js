@@ -131,13 +131,15 @@ class Game {
 
   async draw() { //ensures proper layering
     var zpdGroup = this.board.zpdGroup;
+    //if (this.isGM)
+      this.maskControls.drawPos();
     for (var svgPiece of Object.values(this.svgPieces)) {
       if (svgPiece instanceof SvgAsset) {
         await svgPiece.draw();
         zpdGroup.add(svgPiece.el);
       }
     }
-    this.maskControls.draw();
+    this.maskControls.drawNeg();
     for (var svgPiece of Object.values(this.svgPieces)) {
       if (svgPiece instanceof SvgPlayer) {
         await svgPiece.draw();

@@ -141,6 +141,20 @@ class MaskControls {
     zpdGroup.add(this.mask);
   }
 
+  drawPos() {
+    if (this.isGM) {
+      if (this.mode != 'apply') {
+        this.drawMaskPositive();
+        return
+      }
+    }
+  }
+
+  drawNeg() {
+    if ((!this.isGM) || ((this.isGM) && (this.mode == 'apply')))
+      this.drawMaskNegative();
+  }
+
   draw() {
     if (this.isGM) {
       if (this.mode != 'apply') {

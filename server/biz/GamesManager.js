@@ -16,6 +16,15 @@ class GamesManager {
     delete this.games[room];
   }
 
+  getStats() {
+    return {
+      games: Object.keys(this.games),
+      players: Object.values(this.games).reduce((players,gs) => players.concat(Object.values(gs.pieces).map(p=>p.id)), []),
+      numGames: Object.keys(this.games).length,
+      numPlayers: Object.values(this.games).reduce((count,gs) => count+Object.keys(gs.pieces).length, 0)
+    }
+  }
+
 }
 
 module.exports = GamesManager;

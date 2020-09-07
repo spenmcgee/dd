@@ -39,6 +39,11 @@ router.post('/:room/reset', (req, res) => {
   res.redirect('/');
 })
 
+router.get('/api/stats', (req, res) => {
+  var stats = gm.getStats();
+  res.json(stats);
+})
+
 var msgServer = new MsgServer(3001);
 msgServer.addHandler({
   match: data => data.meta == 'join',

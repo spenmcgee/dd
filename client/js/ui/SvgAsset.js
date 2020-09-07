@@ -50,7 +50,6 @@ class SvgAsset extends SvgElement {
   }
 
   drawKillMark(element) {
-    console.log("here")
     var bb = element.getBBox();
     var lm = element.transform().localMatrix;
     var w = bb.width/lm.a, h = bb.height/lm.a;
