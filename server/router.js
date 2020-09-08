@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const BoardLoader = require('./biz/BoardLoader');
 const DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
+const logger = require("./logger");
 
 var router = express.Router();
 
@@ -22,7 +23,7 @@ router.post('/', (req, res) => {
   var color = req.body["color"];
   var email = req.body["email"];
   var userid = `${user}@${room}`;
-  console.log(`ROOM-ENTER ${userid} ${email}`);
+  logger.info(`ROOM-ENTER ${userid} ${email}`);
   var isGM = user=='GM';
   var cookieOptions = { maxAge: 60*60*24*30*1000 };
   res.cookie("room", room, cookieOptions);
@@ -48,7 +49,7 @@ router.get('/:room/config', (req, res) => {
   var user = req.cookies["user"];
   var isGM = user=='GM';
   var board = BoardLoader.getConfig(room);
-  res.render("config.html", {room:room, user:user, isGM:isGM, boardJson:JSON.stringify(board, null, 2)});
+  res.render("config.html", {room:room, user:user, isGM:isGM, ok:true, boardJson:JSON.stringify(board, null, 2)});
 });
 
 router.post('/:room/config', (req, res) => {
@@ -56,8 +57,8 @@ router.post('/:room/config', (req, res) => {
   var user = req.cookies["user"];
   var isGM = user=='GM';
   var boardJson = req.body.boardJson;
-  var board = BoardLoader.saveConfig(room, boardJson);
-  res.render("config.html", {room:room, user:user, boardJson:boardJson, isGM:isGM});
+  var ok = BoardLoader.saveConfig(room, boardJson);
+  res.render("config.html", {room:room, user:user, boardJson:boardJson, isGM:isGM, message:ok?'Saved ok':'Error saving, invalid json', ok:ok});
 });
 
 router.get('/:room/commands', (req, res) => {

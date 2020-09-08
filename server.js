@@ -12,6 +12,7 @@ const MsgServer = require('./server/biz/MsgServer');
 const MsgRollEventHandler = require('./server/biz/MsgRollEventHandler');
 const MsgSexEventHandler = require('./server/biz/MsgSexEventHandler');
 const GamesManager = require('./server/biz/GamesManager');
+const logger = require("./server/logger");
 
 var app = express();
 var httpServer = http.createServer(app);
@@ -108,5 +109,5 @@ msgServer.addHandler({
   }
 })
 
-console.log("(server) DATA_ROOT", DATA_ROOT);
-app.listen(3000, () => console.log(`Listening on 3000 and 3001`));
+logger.info("(server) DATA_ROOT", DATA_ROOT);
+app.listen(3000, () => logger.info(`Listening on 3000 and 3001`));

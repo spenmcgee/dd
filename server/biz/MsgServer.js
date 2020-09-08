@@ -1,4 +1,5 @@
 const WebSocket = require('ws');
+const logger = require('../logger');
 
 class MsgServer {
 
@@ -48,7 +49,7 @@ class MsgServer {
   }
 
   onMessage(json, wss, ws) {
-    console.log("(MsgServer.onMessage) incoming data", json);
+    logger.debug("(MsgServer.onMessage) incoming data", json);
     var data = JSON.parse(json);
     var outboundDataArray = this.messageHandlers.map(h => {
       if (h.match(data)) {
@@ -62,7 +63,7 @@ class MsgServer {
     .flat()
     .filter(x=>x);
     outboundDataArray = outboundDataArray.map(x => x.projectForWire ? x.projectForWire() : x);
-    console.log("(MsgServer.onMessage) outbound data", JSON.stringify(outboundDataArray));
+    logger.debug("(MsgServer.onMessage) outbound data", JSON.stringify(outboundDataArray));
     this.broadcast(outboundDataArray);
   }
 

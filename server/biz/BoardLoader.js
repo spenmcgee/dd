@@ -1,11 +1,17 @@
 var fs = require('fs');
 var path = require('path');
 var DATA_ROOT = process.env.DATA_ROOT || '/var/dd';
+var logger = require("../logger");
 
 class BoardLoader {
 
   static checkBoardSyntax(jsonStr) {
-    JSON.parse(jsonStr);
+    try {
+      JSON.parse(jsonStr);
+    } catch (err) {
+      logger.warning(`(BoardLoader) Bad json: ` + jsonStr);
+      return false;
+    }
     return true;
   }
 
@@ -17,15 +23,18 @@ class BoardLoader {
       board = JSON.parse(boardJson)
     } catch (err) {
       //noop
-      console.log(`(BoardLoader) Bad json in room ${room}`, err);
+      logger.warning(`(BoardLoader) Bad json in room ${room}`, err);
     }
     return board;
   }
 
   static saveConfig(room, json) {
-    BoardLoader.checkBoardSyntax(json);
-    var filepath = path.join(DATA_ROOT, `${room}-config.json`);
-    fs.writeFileSync(filepath, json);
+    var ok = BoardLoader.checkBoardSyntax(json);
+    if (ok) {
+      var filepath = path.join(DATA_ROOT, `${room}-config.json`);
+      fs.writeFileSync(filepath, json);
+    }
+    return ok;
   }
 
 }

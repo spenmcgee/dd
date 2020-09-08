@@ -13,6 +13,7 @@
     "semaphore-async-await": "^1.5.1",
     "snap.svg.zpd": "^0.0.11",
     "snapsvg": "^0.5.1",
+    "winston": "^3.3.3",
     "ws": "^7.3.0"
   }
 }

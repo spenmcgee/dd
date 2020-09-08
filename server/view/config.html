@@ -2,6 +2,10 @@
 
 {% block main %}
 
+{% if not ok %}
+  <span class="error-message">{{message}}</span>
+{% endif %}
+
 <h1>Config</h1>
 
 <div class="" style="background-color:#eee; padding: 20px; float:right; width:45%">
