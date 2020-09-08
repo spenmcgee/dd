@@ -54,12 +54,11 @@ code {
 
 <div id="menu">
   <span style="padding: 5px; background-color:yellow; margin-right:10px;">{{user}}@{{room}}</span>
-  <a href="/">Start</a> /
   <a href="/{{room}}">Board</a> /
   <a href="/{{room}}/commands">Commands</a> /
   {% if isGM %}
     <a href="/{{room}}/config">Config</a> /
-    <a href="/{{room}}/asset">Assets</a> /
+    <a href="/{{room}}/asset">Characters & Assets</a> /
   {% endif %}
   {% block menu %}
   {% endblock %}
